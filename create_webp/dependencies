@@ -1,0 +1,6 @@
+# Extension: create_webp
+# Hook: after-init-deps
+
+DEPS_DEBIAN_ARR[WEBP]="webp"
+DEPS_REDHAT_ARR[WEBP]="libwebp-tools"
+DEPS_MACOS_ARR[WEBP]="webp"

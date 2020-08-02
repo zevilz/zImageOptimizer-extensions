@@ -1,0 +1,5 @@
+# Extension: gif2jpg
+# Hook: init-loop-vars-after
+
+IMAGES_CONVERTED_GIF2JPG=0
+IMAGES_TOTAL_GIF=0

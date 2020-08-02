@@ -1,0 +1,4 @@
+# Extension: create_webp
+# Hook: init-loop-vars-after
+
+IMAGES_WEBP_CREATED=0

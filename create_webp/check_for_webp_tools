@@ -1,0 +1,5 @@
+# Extension: create_webp
+# Hook: after-init-tools
+
+TOOLS[CWEBP]="cwebp"
+TOOLS[GIF2WEBP]="gif2webp"

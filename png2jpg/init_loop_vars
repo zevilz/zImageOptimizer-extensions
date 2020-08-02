@@ -1,0 +1,5 @@
+# Extension: png2jpg
+# Hook: init-loop-vars-after
+
+IMAGES_CONVERTED_PNG2JPG=0
+IMAGES_TOTAL_PNG=0

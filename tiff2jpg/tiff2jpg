@@ -1,0 +1,98 @@
+# Extension: tiff2jpg
+# Hook: optim-after
+
+if [[ $EXT == "tiff" || $EXT == "TIFF" || $EXT == "tif" || $EXT == "TIF" ]]; then
+
+	includeExtensions tiff2jpg-before
+
+	# Count TIFFs
+	IMAGES_TOTAL_TIFF=$(echo "$IMAGES_TOTAL_TIFF+1" | bc)
+
+	# New image path
+	if [ $TIFF2JPG_SAVE_FILENAME -eq 1 ]; then
+		IMAGE_NEW="${IMAGE}.jpg"
+	else
+		IMAGE_NEW=$(echo "$IMAGE" | rev | cut -f 2- -d '.' | rev)".jpg"
+	fi
+
+	if ! [[ -f "$IMAGE_NEW" ]]; then
+
+		# Disable build-in image restoration if original is smaller
+		RESTORE_IMAGE_CHECK=0
+
+		# Convert image from TIFF to JPG
+		if [ $TIFF2JPG_SAVE_FILENAME -eq 1 ]; then
+			convert "$IMAGE" "${IMAGE}.jpg"
+		else
+			mogrify -format jpg "$IMAGE"
+		fi
+
+		# Check is converted
+		if [[ -f "$IMAGE_NEW" ]]; then
+
+			includeExtensions tiff2jpg-before-success
+
+			IMAGES_CONVERTED_TIFF2JPG=$(echo "$IMAGES_CONVERTED_TIFF2JPG+1" | bc)
+			$SETCOLOR_SUCCESS
+			echo -n "[CONVERTED TIFF->JPG]"
+			$SETCOLOR_NORMAL
+
+			# Remove original TIFF
+			#rm "$TMP_PATH/$(basename "$IMAGE").bkp"
+			if [ $TIFF2JPG_SAVE_ORIGINAL -eq 0 ]; then
+				rm "$IMAGE"
+			fi
+
+			# Change tiff to jpg in $IMAGE var
+			IMAGE="$IMAGE_NEW"
+
+			if [ $TIFF2JPG_OPTIMIZE_JPG -eq 1 ]; then
+
+				# Make backup
+				cp -f "$IMAGE" "$TMP_PATH/$(basename "$IMAGE").bkp"
+
+				# Size before optimize
+				CONVERTED_SIZE_BEFORE=$(wc -c "$IMAGE" | awk '{print $1}')
+
+				# Optimize JPG
+				optimJPG "$IMAGE"
+
+				# Size after optimize
+				CONVERTED_SIZE_AFTER=$(wc -c "$IMAGE" | awk '{print $1}')
+
+				# Check output file and restore if it bigger than input file
+				if [ $CONVERTED_SIZE_BEFORE -le $CONVERTED_SIZE_AFTER ]; then
+					cp -f "$TMP_PATH/$(basename "$IMAGE").bkp" "$IMAGE"
+				fi
+
+			fi
+
+			includeExtensions tiff2jpg-after-success
+
+		else
+
+			includeExtensions tiff2jpg-before-failure
+
+			$SETCOLOR_FAILURE
+			echo -n "[NOT CONVERTED]"
+			$SETCOLOR_NORMAL
+
+			includeExtensions tiff2jpg-after-failure
+
+		fi
+
+	else
+
+		includeExtensions tiff2jpg-before-exists
+
+		$SETCOLOR_FAILURE
+		echo -n "[SAME FILENAME EXISTS]"
+		$SETCOLOR_NORMAL
+
+		includeExtensions tiff2jpg-after-exists
+
+	fi
+
+	includeExtensions tiff2jpg-after
+
+fi

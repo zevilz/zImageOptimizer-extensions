@@ -1,0 +1,6 @@
+# Extension: bmp2jpg
+# Hook: after-init-deps
+
+DEPS_DEBIAN_ARR[IMAGEMAGICK]="imagemagick"
+DEPS_REDHAT_ARR[IMAGEMAGICK]="ImageMagick"
+DEPS_MACOS_ARR[IMAGEMAGICK]="imagemagick"

@@ -1,0 +1,4 @@
+# Extension: bmp2jpg
+# Hook: after-init-img-ext
+
+FIND_EXT_ARR[BMP]='BMP bmp'

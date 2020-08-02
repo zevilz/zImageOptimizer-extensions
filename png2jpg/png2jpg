@@ -1,0 +1,97 @@
+# Extension: png2jpg
+# Hook: optim-png-before
+
+includeExtensions png2jpg-before
+
+# Disable optimize
+OPTIMIZE=0
+
+# Count PNGs
+IMAGES_TOTAL_PNG=$(echo "$IMAGES_TOTAL_PNG+1" | bc)
+
+# New image path
+if [ $PNG2JPG_SAVE_FILENAME -eq 1 ]; then
+	IMAGE_NEW="${IMAGE}.jpg"
+else
+	IMAGE_NEW=$(echo "$IMAGE" | rev | cut -f 2- -d '.' | rev)".jpg"
+fi
+
+if ! [[ -f "$IMAGE_NEW" ]]; then
+
+	# Disable build-in image restoration if original is smaller
+	RESTORE_IMAGE_CHECK=0
+
+	# Convert image from PNG to JPG
+	if [ $PNG2JPG_SAVE_FILENAME -eq 1 ]; then
+		convert -background white -flatten "$IMAGE" "${IMAGE}.jpg"
+	else
+		mogrify -format jpg -background white -flatten "$IMAGE"
+	fi
+
+	# Check is converted
+	if [[ -f "$IMAGE_NEW" ]]; then
+
+		includeExtensions png2jpg-before-success
+
+		IMAGES_CONVERTED_PNG2JPG=$(echo "$IMAGES_CONVERTED_PNG2JPG+1" | bc)
+		$SETCOLOR_SUCCESS
+		echo -n "[CONVERTED PNG->JPG]"
+		$SETCOLOR_NORMAL
+
+		# Remove original PNG
+		#rm "$TMP_PATH/$(basename "$IMAGE").bkp"
+		if [ $PNG2JPG_SAVE_ORIGINAL -eq 0 ]; then
+			rm "$IMAGE"
+		fi
+
+		# Change png to jpg in $IMAGE var
+		IMAGE="$IMAGE_NEW"
+
+		if [ $PNG2JPG_OPTIMIZE_JPG -eq 1 ]; then
+
+			# Make backup
+			cp -f "$IMAGE" "$TMP_PATH/$(basename "$IMAGE").bkp"
+
+			# Size before optimize
+			CONVERTED_SIZE_BEFORE=$(wc -c "$IMAGE" | awk '{print $1}')
+
+			# Optimize JPG
+			optimJPG "$IMAGE"
+
+			# Size after optimize
+			CONVERTED_SIZE_AFTER=$(wc -c "$IMAGE" | awk '{print $1}')
+
+			# Check output file and restore if it bigger than input file
+			if [ $CONVERTED_SIZE_BEFORE -le $CONVERTED_SIZE_AFTER ]; then
+				cp -f "$TMP_PATH/$(basename "$IMAGE").bkp" "$IMAGE"
+			fi
+
+		fi
+
+		includeExtensions png2jpg-after-success
+
+	else
+
+		includeExtensions png2jpg-before-failure
+
+		$SETCOLOR_FAILURE
+		echo -n "[NOT CONVERTED]"
+		$SETCOLOR_NORMAL
+
+		includeExtensions png2jpg-after-failure
+
+	fi
+
+else
+
+	includeExtensions png2jpg-before-exists
+
+	$SETCOLOR_FAILURE
+	echo -n "[SAME FILENAME EXISTS]"
+	$SETCOLOR_NORMAL
+
+	includeExtensions png2jpg-after-exists
+
+fi
+
+includeExtensions png2jpg-after

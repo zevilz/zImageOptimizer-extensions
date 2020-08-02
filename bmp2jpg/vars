@@ -1,0 +1,6 @@
+# Extension: bmp2jpg
+# Hook: after-init-vars
+
+BMP2JPG_SAVE_FILENAME=1
+BMP2JPG_SAVE_ORIGINAL=1
+BMP2JPG_OPTIMIZE_JPG=1

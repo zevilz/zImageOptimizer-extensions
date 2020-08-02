@@ -1,0 +1,6 @@
+# Extension: gif2jpg
+# Hook: after-init-vars
+
+GIF2JPG_SAVE_FILENAME=1
+GIF2JPG_SAVE_ORIGINAL=1
+GIF2JPG_OPTIMIZE_JPG=1

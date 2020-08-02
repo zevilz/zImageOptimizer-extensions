@@ -1,0 +1,5 @@
+# Extension: tiff2jpg
+# Hook: init-loop-vars-after
+
+IMAGES_CONVERTED_TIFF2JPG=0
+IMAGES_TOTAL_TIFF=0

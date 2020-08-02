@@ -1,0 +1,6 @@
+# Extension: png2jpg
+# Hook: after-init-vars
+
+PNG2JPG_SAVE_FILENAME=1
+PNG2JPG_SAVE_ORIGINAL=1
+PNG2JPG_OPTIMIZE_JPG=1

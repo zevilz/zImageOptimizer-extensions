@@ -1,0 +1,4 @@
+# Extension: create_webp
+# Hook: after-init-vars
+
+WEBP_QUALITY=80

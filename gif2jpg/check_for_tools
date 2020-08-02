@@ -1,0 +1,4 @@
+# Extension: gif2jpg
+# Hook: after-init-tools
+
+TOOLS[IMAGEMAGICK]="mogrify convert"

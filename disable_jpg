@@ -1,0 +1,4 @@
+# Extension: disable_jpg
+# Hook: after-init-image-types
+
+unset IMG_TYPES_ARR[JPG]

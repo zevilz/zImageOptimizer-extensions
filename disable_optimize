@@ -1,0 +1,4 @@
+# Extension: disable_optimize
+# Hook: optim-before
+
+OPTIMIZE=0

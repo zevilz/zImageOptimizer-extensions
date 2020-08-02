@@ -1,0 +1,8 @@
+# Extension: create_webp
+# Hook: total-info-time-before
+
+echo -n "WebP created/Total: "
+echo -n $IMAGES_WEBP_CREATED
+echo -n " / "
+echo -n $IMAGES_TOTAL
+echo " files"

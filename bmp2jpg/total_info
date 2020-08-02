@@ -1,0 +1,8 @@
+# Extension: bmp2jpg
+# Hook: total-info-time-before
+
+echo -n "Converted BMP->JPG/Total: "
+echo -n $IMAGES_CONVERTED_BMP2JPG
+echo -n " / "
+echo -n $IMAGES_TOTAL_BMP
+echo " BMPs"

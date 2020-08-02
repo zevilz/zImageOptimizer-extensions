@@ -1,0 +1,8 @@
+# Extension: gif2jpg
+# Hook: total-info-time-before
+
+echo -n "Converted GIF->JPG/Total: "
+echo -n $IMAGES_CONVERTED_GIF2JPG
+echo -n " / "
+echo -n $IMAGES_TOTAL_GIF
+echo " GIFs"

@@ -1,0 +1,54 @@
+# Extension: create_webp
+# Hook: optim-before
+
+if [[ \
+	$EXT == "jpg" || $EXT == "jpeg" || $EXT == "JPG" || $EXT == "JPEG" || \
+	$EXT == "png" || $EXT == "PNG" || \
+	$EXT == "gif" || $EXT == "GIF" || \
+	$EXT == "tiff" || $EXT == "TIFF" || $EXT == "tif" || $EXT == "TIF" \
+]]; then
+
+	# WebP image name
+	IMAGE_WEBP=$(echo "$IMAGE" | rev | cut -f 2- -d '.' | rev)".webp"
+
+	# Check for WebP image exists
+	if ! [[ -f "$IMAGE_WEBP" ]]; then
+
+		# Create WebP in same directory
+		if [[ $EXT == "gif" || $EXT == "GIF" ]]; then
+			gif2webp -quiet -q $WEBP_QUALITY "$IMAGE" -o "$IMAGE_WEBP" > /dev/null
+		else
+			cwebp -quiet -q $WEBP_QUALITY "$IMAGE" -o "$IMAGE_WEBP" > /dev/null
+		fi
+
+		# Check is converted
+		if [[ -f "$IMAGE_WEBP" ]]; then
+
+			IMAGES_WEBP_CREATED=$(echo "$IMAGES_WEBP_CREATED+1" | bc)
+			$SETCOLOR_SUCCESS
+			echo -n "[WEBP CREATED]"
+			$SETCOLOR_NORMAL
+
+		else
+
+			$SETCOLOR_FAILURE
+			echo -n "[WEBP NOT CREATED]"
+			$SETCOLOR_NORMAL
+
+		fi
+
+	else
+
+		$SETCOLOR_FAILURE
+		echo -n "[WEBP ALREADY EXISTS]"
+		$SETCOLOR_NORMAL
+
+	fi
+
+else
+
+	$SETCOLOR_FAILURE
+	echo -n "[SKIPPED WEBP CREATE]"
+	$SETCOLOR_NORMAL
+
+fi

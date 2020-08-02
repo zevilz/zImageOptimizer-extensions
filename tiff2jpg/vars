@@ -1,0 +1,6 @@
+# Extension: tiff2jpg
+# Hook: after-init-vars
+
+TIFF2JPG_SAVE_FILENAME=1
+TIFF2JPG_SAVE_ORIGINAL=1
+TIFF2JPG_OPTIMIZE_JPG=1

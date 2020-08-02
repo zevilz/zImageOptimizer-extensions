@@ -1,0 +1,4 @@
+# Extension: tiff2jpg
+# Hook: after-init-img-ext
+
+FIND_EXT_ARR[TIFF]='TIFF tiff TIF tif'

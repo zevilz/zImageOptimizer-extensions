@@ -1,0 +1,4 @@
+# Extension: png2jpg
+# Hook: after-init-tools
+
+unset TOOLS[PNG]

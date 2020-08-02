@@ -1,0 +1,8 @@
+# Extension: png2jpg
+# Hook: total-info-time-before
+
+echo -n "Converted PNG->JPG/Total: "
+echo -n $IMAGES_CONVERTED_PNG2JPG
+echo -n " / "
+echo -n $IMAGES_TOTAL_PNG
+echo " PNGs"

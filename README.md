@@ -6,7 +6,7 @@ Prepared extensions for [zImageOptimizer](https://github.com/zevilz/zImageOptimi
 
 Adds converting images to webp. Original images are preserved. A suffix is added to the converted images. Optimization of original images is not disabled. Extension have support for jpg, png, gif, tiff formats (tiff not supported by main script).
 
-WebP quality is set to 80 by default. You can change it in file `vars`.
+WebP quality is set to `80` by default. You can change it in `vars` file. It is not recommended to set a high quality, because the output images will be larger than the input images, and the visual quality will hardly differ from the lower quality. 80-85 is optimal quality.
 
 ## png2jpg
 

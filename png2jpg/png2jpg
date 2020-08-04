@@ -39,8 +39,7 @@ if ! [[ -f "$IMAGE_NEW" ]]; then
 		$SETCOLOR_NORMAL
 
 		# Remove original PNG
-		#rm "$TMP_PATH/$(basename "$IMAGE").bkp"
-		if [ $PNG2JPG_SAVE_ORIGINAL -eq 0 ]; then
+		if [[ $PNG2JPG_SAVE_ORIGINAL -eq 0 && -f "$IMAGE" ]]; then
 			rm "$IMAGE"
 		fi
 

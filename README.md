@@ -63,3 +63,19 @@ Completely remove GIF support including checking tools and find images.
 ## disable_optimize
 
 Disable build-in optimize. This helpful for use your own extensions which use third-party ways to optimize or something else operations with images (like converting).
+
+## tlg_notify
+
+Sends notification to telegram after optimization. Message include:
+
+- hostname;
+- working directory;
+- input/output/saved size;
+- optimized/total images count;
+- optimize time;
+- text info from other extensions hooked to `total-info-time-before` hook.
+
+Available vars (in `vars` file):
+
+- `TLG_BOT_TOKEN` - telegram bot token (you must use [@BotFather](https://t.me/BotFather) for register bot);
+- `TLG_CHAT_ID` - telegram user/chat ID (you can use [@zGetMyID_bot](https://t.me/zGetMyID_bot) for get ID).

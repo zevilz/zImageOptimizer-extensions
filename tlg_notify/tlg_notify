@@ -1,0 +1,31 @@
+# Extension: tlg_notify
+# Hook: total-info-after
+
+TLG_TEXT=$(\
+	echo "*zImageOptimizer notify from $HOSTNAME*";\
+	echo ;\
+	echo "Working dir: $DIR_PATH";\
+	echo -n "Input: ";\
+	readableSize $INPUT;\
+	echo;\
+	echo -n "Output: ";\
+	readableSize $OUTPUT;\
+	echo;\
+	echo -n "You save: ";\
+	readableSize $SAVED_SIZE;\
+	echo " / $(echo "scale=2; 100-$OUTPUT*100/$INPUT" | bc | sed 's/^\./0./')%";\
+	echo -n "Optimized/Total: ";\
+	echo -n $IMAGES_OPTIMIZED;\
+	echo -n " / ";\
+	echo -n $IMAGES_TOTAL;\
+	echo " files";\
+	includeExtensions total-info-time-before;\
+	echo -n "Total optimizing time: ";\
+	readableTime $TOTAL_TIME\
+)
+
+curl -s -X POST https://api.telegram.org/bot${TLG_BOT_TOKEN}/sendMessage \
+	-d chat_id="${TLG_CHAT_ID}" \
+	-d text="$TLG_TEXT" \
+	-d parse_mode="Markdown" \
+	> /dev/null 2 > /dev/null

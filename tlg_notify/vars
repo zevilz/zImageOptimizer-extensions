@@ -1,0 +1,5 @@
+# Extension: tlg_notify
+# Hook: after-init-vars
+
+TLG_BOT_TOKEN=""
+TLG_CHAT_ID=""

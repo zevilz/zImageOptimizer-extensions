@@ -38,8 +38,7 @@ if [[ $EXT == "bmp" || $EXT == "BMP" ]]; then
 			$SETCOLOR_NORMAL
 
 			# Remove original BMP
-			#rm "$TMP_PATH/$(basename "$IMAGE").bkp"
-			if [ $BMP2JPG_SAVE_ORIGINAL -eq 0 ]; then
+			if [[ $BMP2JPG_SAVE_ORIGINAL -eq 0 && -f "$IMAGE" ]]; then
 				rm "$IMAGE"
 			fi
 

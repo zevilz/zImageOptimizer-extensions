@@ -39,8 +39,7 @@ if ! [[ -f "$IMAGE_NEW" ]]; then
 		$SETCOLOR_NORMAL
 
 		# Remove original GIF
-		#rm "$TMP_PATH/$(basename "$IMAGE").bkp"
-		if [ $GIF2JPG_SAVE_ORIGINAL -eq 0 ]; then
+		if [[ $GIF2JPG_SAVE_ORIGINAL -eq 0 && -f "$IMAGE" ]]; then
 			rm "$IMAGE"
 		fi
 

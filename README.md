@@ -1,6 +1,6 @@
 # zImageOptimizer extensions
 
-Prepared extensions for [zImageOptimizer](https://github.com/zevilz/zImageOptimizer)
+Prepared extensions for [zImageOptimizer](https://github.com/zevilz/zImageOptimizer) script.
 
 ## create_webp
 

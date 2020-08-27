@@ -9,7 +9,7 @@ if [[ \
 ]]; then
 
 	# WebP image name
-	IMAGE_WEBP=$(echo "$IMAGE" | rev | cut -f 2- -d '.' | rev)".webp"
+	IMAGE_WEBP="${IMAGE}.webp"
 
 	# Check for WebP image exists
 	if ! [[ -f "$IMAGE_WEBP" ]]; then

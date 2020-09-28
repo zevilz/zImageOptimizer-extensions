@@ -24,6 +24,10 @@ if [[ \
 		# Check is converted
 		if [[ -f "$IMAGE_WEBP" ]]; then
 
+			# Copy owner and permissions
+			chown $CUR_OWNER "$IMAGE_WEBP"
+			chmod $CUR_PERMS "$IMAGE_WEBP"
+
 			IMAGES_WEBP_CREATED=$(echo "$IMAGES_WEBP_CREATED+1" | bc)
 			$SETCOLOR_SUCCESS
 			echo -n "[WEBP CREATED]"

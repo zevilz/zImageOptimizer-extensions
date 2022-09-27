@@ -71,6 +71,7 @@ if ! [[ -f "$IMAGE_NEW" ]]; then
 		fi
 
 		includeExtensions gif2jpg-after-success
+		includeExtensions convert2jpg-after-success
 
 	else
 

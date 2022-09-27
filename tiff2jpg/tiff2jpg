@@ -70,6 +70,7 @@ if [[ $EXT == "tiff" || $EXT == "TIFF" || $EXT == "tif" || $EXT == "TIF" ]]; the
 			fi
 
 			includeExtensions tiff2jpg-after-success
+			includeExtensions convert2jpg-after-success
 
 		else
 

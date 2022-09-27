@@ -34,6 +34,7 @@ if [[ $EXT == "bmp" || $EXT == "BMP" ]]; then
 		if [[ -f "$IMAGE_NEW" ]]; then
 
 			includeExtensions bmp2jpg-before-success
+			includeExtensions convert2jpg-before-success
 
 			IMAGES_CONVERTED_BMP2JPG=$(echo "$IMAGES_CONVERTED_BMP2JPG+1" | bc)
 			$SETCOLOR_SUCCESS

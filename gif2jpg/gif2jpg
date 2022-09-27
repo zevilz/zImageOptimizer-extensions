@@ -35,6 +35,7 @@ if ! [[ -f "$IMAGE_NEW" ]]; then
 	if [[ -f "$IMAGE_NEW" ]]; then
 
 		includeExtensions gif2jpg-before-success
+		includeExtensions convert2jpg-before-success
 
 		IMAGES_CONVERTED_GIF2JPG=$(echo "$IMAGES_CONVERTED_GIF2JPG+1" | bc)
 		$SETCOLOR_SUCCESS

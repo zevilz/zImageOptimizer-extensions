@@ -34,6 +34,7 @@ if [[ $EXT == "tiff" || $EXT == "TIFF" || $EXT == "tif" || $EXT == "TIF" ]]; the
 		if [[ -f "$IMAGE_NEW" ]]; then
 
 			includeExtensions tiff2jpg-before-success
+			includeExtensions convert2jpg-before-success
 
 			IMAGES_CONVERTED_TIFF2JPG=$(echo "$IMAGES_CONVERTED_TIFF2JPG+1" | bc)
 			$SETCOLOR_SUCCESS

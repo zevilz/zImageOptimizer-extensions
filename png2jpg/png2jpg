@@ -35,6 +35,7 @@ if ! [[ -f "$IMAGE_NEW" ]]; then
 	if [[ -f "$IMAGE_NEW" ]]; then
 
 		includeExtensions png2jpg-before-success
+		includeExtensions convert2jpg-before-success
 
 		IMAGES_CONVERTED_PNG2JPG=$(echo "$IMAGES_CONVERTED_PNG2JPG+1" | bc)
 		$SETCOLOR_SUCCESS

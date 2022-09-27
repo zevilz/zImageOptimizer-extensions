@@ -16,6 +16,9 @@ else
 	IMAGE_NEW=$(echo "$IMAGE" | rev | cut -f 2- -d '.' | rev)".jpg"
 fi
 
+# Save old image path
+IMAGE_OLD="$IMAGE"
+
 if ! [[ -f "$IMAGE_NEW" ]]; then
 
 	# Disable build-in image restoration if original is smaller

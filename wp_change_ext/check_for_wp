@@ -1,0 +1,30 @@
+# Extension: wp_change_ext
+# Hook: after-check-input-data
+
+if [ -z "$WP_ROOT" ]; then
+	if ! [[ "$DIR_PATH" =~ /wp-content/uploads$ ]]; then
+		echo
+		$SETCOLOR_FAILURE
+		echo "Not WP uploads path set in selected path!"
+		$SETCOLOR_NORMAL
+		echo
+		exit 1
+	fi
+
+	WP_ROOT=$(echo "$DIR_PATH" | sed 's|/wp-content/uploads||')
+fi
+
+if ! [[ -f "${WP_ROOT}/wp-load.php" ]]; then
+	echo
+	$SETCOLOR_FAILURE
+	echo "WP root not found in selected path!"
+	$SETCOLOR_NORMAL
+	echo
+	exit 1
+fi
+
+if [[ "$OSTYPE" == "linux-gnu" ]]; then
+	WP_OWNER=$(stat -c "%U" "${WP_ROOT}/wp-load.php")
+else
+	WP_OWNER=$(ls -l "${WP_ROOT}/wp-load.php" | awk '{print $3}')
+fi

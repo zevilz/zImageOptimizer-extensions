@@ -1,0 +1,19 @@
+# Extension: wp_change_ext
+# Hook: after-init-tools
+
+if [ -z "$WPCLI_CUSTOM_PATH" ]; then
+	TOOLS[WP]="wp"
+	WPCLI="wp"
+else
+	echo
+	if [ -f "$WPCLI_CUSTOM_PATH" ]; then
+		echo "Custom WP-CLI path: $WPCLI_CUSTOM_PATH"
+		WPCLI="$WPCLI_CUSTOM_PATH"
+	else
+		$SETCOLOR_FAILURE
+		echo "WP-CLI not found in ${WPCLI_CUSTOM_PATH}!"
+		$SETCOLOR_NORMAL
+		echo
+		exit 1
+	fi
+fi

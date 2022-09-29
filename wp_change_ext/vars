@@ -1,0 +1,5 @@
+# Extension: wp_change_ext
+# Hook: after-parse-options
+
+WP_ROOT=""
+WPCLI_CUSTOM_PATH=""

@@ -1,0 +1,4 @@
+# Extension: wp_change_ext
+# Hook: init-loop-vars-after
+
+WP_REPLACEMENTS=0

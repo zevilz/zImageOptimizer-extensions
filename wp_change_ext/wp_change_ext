@@ -1,0 +1,33 @@
+# Extension: wp_change_ext
+# Hook: convert2jpg-before-success
+
+# Save original PATH
+ORIGINAL_PATH=$PATH
+
+# Get main script paths
+PATH=$(echo "$BINARY_PATHS" | tr ' ' ':')
+
+# Replace
+if [ $CUR_USER == "root" ]; then
+	WP_REPLACE=$(su -l $WP_OWNER -s /bin/bash -c "$WPCLI search-replace \"${IMAGE_OLD}\" \"{$IMAGE}\" --all-tables --path=${WP_ROOT} --report-changed-only")
+else
+	WP_REPLACE=$($WPCLI search-replace "${IMAGE_OLD}" "{$IMAGE}" --all-tables --path=${WP_ROOT} --report-changed-only)
+fi
+
+if [ $? -eq 0 ]; then
+	IMAGE_REPLACEMENTS=$(echo "$WP_REPLACE" | sed 's/.*Made \([0-9]\+\) replacements.*/\1/')
+	if [[ "$IMAGE_REPLACEMENTS" =~ ^[0-9]+$ ]]; then
+		WP_REPLACEMENTS=$(echo "$WP_REPLACEMENTS+$IMAGE_REPLACEMENTS" | bc)
+	fi
+	$SETCOLOR_SUCCESS
+	echo -n "[REPLACED IN WP]"
+	$SETCOLOR_NORMAL
+else
+	$SETCOLOR_FAILURE
+	echo -n "[REPLACE IN WP FAILED]"
+	$SETCOLOR_NORMAL
+	REVERT_CONVERTING=1
+fi
+
+# Restore original PATH
+PATH=$ORIGINAL_PATH

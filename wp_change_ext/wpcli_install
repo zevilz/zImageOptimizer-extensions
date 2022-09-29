@@ -1,0 +1,8 @@
+# Extension: wp_change_ext
+# Hook: after-install-deps
+
+if ! [ -z "$ISSET_wp" ] && [ "$ISSET_wp" -eq 0 ]; then
+	wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+	chmod +x wp-cli.phar
+	$SUDO wp-cli.phar /bin/wp
+fi

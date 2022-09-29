@@ -35,43 +35,54 @@ if ! [[ -f "$IMAGE_NEW" ]]; then
 	if [[ -f "$IMAGE_NEW" ]]; then
 
 		SAVE_ORIGINAL=0
+		REVERT_CONVERTING=0
 
 		includeExtensions png2jpg-before-success
 		includeExtensions convert2jpg-before-success
 
-		IMAGES_CONVERTED_PNG2JPG=$(echo "$IMAGES_CONVERTED_PNG2JPG+1" | bc)
-		$SETCOLOR_SUCCESS
-		echo -n "[CONVERTED PNG->JPG]"
-		$SETCOLOR_NORMAL
+		if [[ $REVERT_CONVERTING -eq 0 ]]; then
 
-		# Remove original PNG
-		if [[ $PNG2JPG_SAVE_ORIGINAL -eq 0 && -f "$IMAGE" ]]; then
-			if [[ $SAVE_ORIGINAL -eq 0 ]]; then
-				rm "$IMAGE"
+			IMAGES_CONVERTED_PNG2JPG=$(echo "$IMAGES_CONVERTED_PNG2JPG+1" | bc)
+			$SETCOLOR_SUCCESS
+			echo -n "[CONVERTED PNG->JPG]"
+			$SETCOLOR_NORMAL
+
+			# Remove original PNG
+			if [[ $PNG2JPG_SAVE_ORIGINAL -eq 0 && -f "$IMAGE" ]]; then
+				if [[ $SAVE_ORIGINAL -eq 0 ]]; then
+					rm "$IMAGE"
+				fi
 			fi
-		fi
 
-		# Change png to jpg in $IMAGE var
-		IMAGE="$IMAGE_NEW"
+			# Change png to jpg in $IMAGE var
+			IMAGE="$IMAGE_NEW"
 
-		if [ $PNG2JPG_OPTIMIZE_JPG -eq 1 ]; then
+			if [ $PNG2JPG_OPTIMIZE_JPG -eq 1 ]; then
 
-			# Make backup
-			cp -f "$IMAGE" "$TMP_PATH/$(basename "$IMAGE").bkp"
+				# Make backup
+				cp -f "$IMAGE" "$TMP_PATH/$(basename "$IMAGE").bkp"
 
-			# Size before optimize
-			CONVERTED_SIZE_BEFORE=$(wc -c "$IMAGE" | awk '{print $1}')
+				# Size before optimize
+				CONVERTED_SIZE_BEFORE=$(wc -c "$IMAGE" | awk '{print $1}')
 
-			# Optimize JPG
-			optimJPG "$IMAGE"
+				# Optimize JPG
+				optimJPG "$IMAGE"
 
-			# Size after optimize
-			CONVERTED_SIZE_AFTER=$(wc -c "$IMAGE" | awk '{print $1}')
+				# Size after optimize
+				CONVERTED_SIZE_AFTER=$(wc -c "$IMAGE" | awk '{print $1}')
 
-			# Check output file and restore if it bigger than input file
-			if [ $CONVERTED_SIZE_BEFORE -le $CONVERTED_SIZE_AFTER ]; then
-				cp -f "$TMP_PATH/$(basename "$IMAGE").bkp" "$IMAGE"
+				# Check output file and restore if it bigger than input file
+				if [ $CONVERTED_SIZE_BEFORE -le $CONVERTED_SIZE_AFTER ]; then
+					cp -f "$TMP_PATH/$(basename "$IMAGE").bkp" "$IMAGE"
+				fi
+
 			fi
+
+		else
+
+			$SETCOLOR_FAILURE
+			echo -n "[CONVERTING REVERTED]"
+			$SETCOLOR_NORMAL
 
 		fi
 

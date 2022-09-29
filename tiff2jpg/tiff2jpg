@@ -85,6 +85,9 @@ if [[ $EXT == "tiff" || $EXT == "TIFF" || $EXT == "tif" || $EXT == "TIF" ]]; the
 				echo -n "[CONVERTING REVERTED]"
 				$SETCOLOR_NORMAL
 
+				includeExtensions png2jpg-reverted
+				includeExtensions convert2jpg-reverted
+
 			fi
 
 			includeExtensions tiff2jpg-after-success

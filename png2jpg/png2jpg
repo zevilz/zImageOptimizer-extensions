@@ -86,6 +86,9 @@ if ! [[ -f "$IMAGE_NEW" ]]; then
 			echo -n "[CONVERTING REVERTED]"
 			$SETCOLOR_NORMAL
 
+			includeExtensions png2jpg-reverted
+			includeExtensions convert2jpg-reverted
+
 		fi
 
 		includeExtensions png2jpg-after-success

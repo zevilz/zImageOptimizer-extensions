@@ -85,6 +85,9 @@ if [[ $EXT == "bmp" || $EXT == "BMP" ]]; then
 				echo -n "[CONVERTING REVERTED]"
 				$SETCOLOR_NORMAL
 
+				includeExtensions png2jpg-reverted
+				includeExtensions convert2jpg-reverted
+
 			fi
 
 			includeExtensions bmp2jpg-after-success

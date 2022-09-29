@@ -79,6 +79,8 @@ if [[ $EXT == "bmp" || $EXT == "BMP" ]]; then
 
 			else
 
+				rm "$IMAGE_NEW"
+
 				$SETCOLOR_FAILURE
 				echo -n "[CONVERTING REVERTED]"
 				$SETCOLOR_NORMAL

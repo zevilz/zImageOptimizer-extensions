@@ -79,6 +79,8 @@ if [[ $EXT == "tiff" || $EXT == "TIFF" || $EXT == "tif" || $EXT == "TIF" ]]; the
 
 			else
 
+				rm "$IMAGE_NEW"
+
 				$SETCOLOR_FAILURE
 				echo -n "[CONVERTING REVERTED]"
 				$SETCOLOR_NORMAL

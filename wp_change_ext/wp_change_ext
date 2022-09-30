@@ -18,10 +18,18 @@ if [ $? -eq 0 ]; then
 	IMAGE_REPLACEMENTS=$(echo "$WP_REPLACE" | sed 's/.*Made \([0-9]\+\) replacements.*/\1/')
 	if [[ "$IMAGE_REPLACEMENTS" =~ ^[0-9]+$ ]]; then
 		WP_REPLACEMENTS=$(echo "$WP_REPLACEMENTS+$IMAGE_REPLACEMENTS" | bc)
+		if [ $WP_REPLACEMENTS -eq 0 ]; then
+			echo -n "[NO WP REPLACEMENTS]"
+		else
+			$SETCOLOR_SUCCESS
+			echo -n "[WP REPLACEMENTS: ${WP_REPLACEMENTS}]"
+			$SETCOLOR_NORMAL
+		fi
+	else
+		$SETCOLOR_FAILURE
+		echo -n "[UNKNOWN WP REPLACEMENTS COUNT]"
+		$SETCOLOR_NORMAL
 	fi
-	$SETCOLOR_SUCCESS
-	echo -n "[REPLACED IN WP]"
-	$SETCOLOR_NORMAL
 else
 	$SETCOLOR_FAILURE
 	echo -n "[REPLACE IN WP FAILED]"

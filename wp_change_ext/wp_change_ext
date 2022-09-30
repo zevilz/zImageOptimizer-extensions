@@ -21,6 +21,7 @@ if [ $? -eq 0 ]; then
 		if [ $WP_REPLACEMENTS -eq 0 ]; then
 			echo -n "[NO WP REPLACEMENTS]"
 		else
+			WP_REPLACED=$(echo "$WP_REPLACED+1" | bc)
 			$SETCOLOR_SUCCESS
 			echo -n "[WP REPLACEMENTS: ${WP_REPLACEMENTS}]"
 			$SETCOLOR_NORMAL

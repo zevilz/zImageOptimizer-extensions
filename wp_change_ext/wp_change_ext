@@ -7,15 +7,19 @@ ORIGINAL_PATH=$PATH
 # Get main script paths
 PATH=$(echo "$BINARY_PATHS" | tr ' ' ':')
 
+# Get images URI for replace
+IMAGE_OLD_URI=$(echo "$IMAGE_OLD" | sed "s|${WP_ROOT}||")
+IMAGE_NEW_URI=$(echo "$IMAGE_NEW" | sed "s|${WP_ROOT}||")
+
 # Replace
 if [ $CUR_USER == "root" ]; then
-	WP_REPLACE=$(su -l $WP_OWNER -s /bin/bash -c "$WPCLI search-replace \"${IMAGE_OLD}\" \"${IMAGE_NEW}\" --all-tables --path=${WP_ROOT} --report-changed-only")
+	WP_REPLACE=$(su -l $WP_OWNER -s /bin/bash -c "$WPCLI search-replace \"${IMAGE_OLD_URI}\" \"${IMAGE_NEW_URI}\" --all-tables --path=${WP_ROOT} --report-changed-only --all-tables")
 else
-	WP_REPLACE=$($WPCLI search-replace "${IMAGE_OLD}" "${IMAGE_NEW}" --all-tables --path=${WP_ROOT} --report-changed-only)
+	WP_REPLACE=$($WPCLI search-replace "${IMAGE_OLD_URI}" "${IMAGE_NEW_URI}" --all-tables --path=${WP_ROOT} --report-changed-only --all-tables)
 fi
 
 if [ $? -eq 0 ]; then
-	IMAGE_REPLACEMENTS=$(echo "$WP_REPLACE" | sed 's/.*Made \([0-9]\+\) replacements.*/\1/')
+	IMAGE_REPLACEMENTS=$(echo "$WP_REPLACE" | grep "Success:" | sed 's/.*Made \([0-9]\+\) replacements.*/\1/')
 	if [[ "$IMAGE_REPLACEMENTS" =~ ^[0-9]+$ ]]; then
 		WP_REPLACEMENTS=$(echo "$WP_REPLACEMENTS+$IMAGE_REPLACEMENTS" | bc)
 		if [ $WP_REPLACEMENTS -eq 0 ]; then

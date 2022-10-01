@@ -1,6 +1,4 @@
 <?php
-// don't save filename (override vars *_SAVE_FILENAME)
-
 class zioHelper {
 
 	function __construct() {
@@ -75,7 +73,7 @@ class zioHelper {
 		WP_CLI::debug( 'new mime: ' . $new_mime, 'zio-helper' );
 
 		// update post
-		/*$update_attachment = $this->wpdb->update(
+		$update_attachment = $this->wpdb->update(
 			$this->wpdb->posts,
 				['guid' => $new_url, 'post_mime_type' => $new_mime],
 				['ID' => $attachment_id],
@@ -84,14 +82,14 @@ class zioHelper {
 		);
 		if ( empty( $update_attachment ) ) {
 			WP_CLI::error( 'Attachment not updated!' );
-		}*/
+		}
 
 		// update postmeta (_wp_attached_file)
 		$old_meta_attached_file = get_post_meta( $attachment_id, '_wp_attached_file', true );
 		$new_meta_attached_file = str_replace( $old_name, $new_name, $old_meta_attached_file );
 		WP_CLI::debug( 'old _wp_attached_file: ' . $old_meta_attached_file, 'zio-helper' );
 		WP_CLI::debug( 'new _wp_attached_file: ' . $new_meta_attached_file, 'zio-helper' );
-		/*$update_meta_attached_file = update_post_meta( $attachment_id, '_wp_attached_file', $new_meta_attached_file );
+		$update_meta_attached_file = update_post_meta( $attachment_id, '_wp_attached_file', $new_meta_attached_file );
 		if ( false === $update_meta_attached_file ) {
 			// Restore attachment
 			$this->wpdb->update(
@@ -103,13 +101,13 @@ class zioHelper {
 			);
 
 			WP_CLI::error( 'Meta _wp_attached_file not updated!' );
-		}*/
+		}
 
 		// update postmeta (_wp_attachment_metadata)
 		require_once( ABSPATH . 'wp-admin/includes/image.php' );
 		$attachment_data = wp_generate_attachment_metadata( $attachment_id, $new_path );
 		WP_CLI::debug( 'new _wp_attachment_metadata: ' . serialize( $attachment_data ), 'zio-helper' );
-		/*$update_meta_attachment_data = update_post_meta( $attachment_id, '_wp_attachment_metadata', $attachment_data );
+		$update_meta_attachment_data = update_post_meta( $attachment_id, '_wp_attachment_metadata', $attachment_data );
 		if ( false === $update_meta_attachment_data ) {
 			// Restore attachment
 			$this->wpdb->update(
@@ -124,7 +122,7 @@ class zioHelper {
 			update_post_meta( $attachment_id, '_wp_attached_file', $old_meta_attached_file );
 
 			WP_CLI::error( 'Meta _wp_attached_file not updated!' );
-		}*/
+		}
 
 		WP_CLI::success( 'Attachment data updated.' );
 	}

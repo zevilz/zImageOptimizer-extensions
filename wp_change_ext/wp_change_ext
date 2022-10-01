@@ -34,13 +34,13 @@ if [[ "$WP_REPLACE_ATTACHMENT_RESULT" -eq 0 || "$WP_REPLACE_ATTACHMENT_RESULT" -
 	if [ "$WP_REPLACE_RESULT" -eq 0 ]; then
 		IMAGE_REPLACEMENTS=$(echo "$WP_REPLACE" | grep "Success:" | sed 's/.*Made \([0-9]\+\) replacements.*/\1/')
 		if [[ "$IMAGE_REPLACEMENTS" =~ ^[0-9]+$ ]]; then
-			WP_REPLACEMENTS=$(echo "$WP_REPLACEMENTS+$IMAGE_REPLACEMENTS" | bc)
-			if [ $WP_REPLACEMENTS -eq 0 ]; then
+			WP_IMAGES_REPLACEMENTS=$(echo "$WP_IMAGES_REPLACEMENTS+$IMAGE_REPLACEMENTS" | bc)
+			if [ $IMAGE_REPLACEMENTS -eq 0 ]; then
 				echo -n "[NO WP REPLACEMENTS]"
 			else
-				WP_REPLACED=$(echo "$WP_REPLACED+1" | bc)
+				WP_IMAGES_REPLACED=$(echo "$WP_IMAGES_REPLACED+1" | bc)
 				$SETCOLOR_SUCCESS
-				echo -n "[WP REPLACEMENTS: ${WP_REPLACEMENTS}]"
+				echo -n "[WP REPLACEMENTS: ${IMAGE_REPLACEMENTS}]"
 				$SETCOLOR_NORMAL
 			fi
 		else

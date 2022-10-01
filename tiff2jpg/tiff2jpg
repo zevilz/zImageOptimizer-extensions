@@ -33,7 +33,6 @@ if [[ $EXT == "tiff" || $EXT == "TIFF" || $EXT == "tif" || $EXT == "TIF" ]]; the
 		# Check is converted
 		if [[ -f "$IMAGE_NEW" ]]; then
 
-			SAVE_ORIGINAL=0
 			REVERT_CONVERTING=0
 
 			includeExtensions tiff2jpg-before-success
@@ -48,9 +47,7 @@ if [[ $EXT == "tiff" || $EXT == "TIFF" || $EXT == "tif" || $EXT == "TIF" ]]; the
 
 				# Remove original TIFF
 				if [[ $TIFF2JPG_SAVE_ORIGINAL -eq 0 && -f "$IMAGE" ]]; then
-					if [[ $SAVE_ORIGINAL -eq 0 ]]; then
-						rm "$IMAGE"
-					fi
+					rm "$IMAGE"
 				fi
 
 				# Change tiff to jpg in $IMAGE var

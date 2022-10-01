@@ -33,7 +33,6 @@ if [[ $EXT == "bmp" || $EXT == "BMP" ]]; then
 		# Check is converted
 		if [[ -f "$IMAGE_NEW" ]]; then
 
-			SAVE_ORIGINAL=0
 			REVERT_CONVERTING=0
 
 			includeExtensions bmp2jpg-before-success
@@ -48,9 +47,7 @@ if [[ $EXT == "bmp" || $EXT == "BMP" ]]; then
 
 				# Remove original BMP
 				if [[ $BMP2JPG_SAVE_ORIGINAL -eq 0 && -f "$IMAGE" ]]; then
-					if [[ $SAVE_ORIGINAL -eq 0 ]]; then
-						rm "$IMAGE"
-					fi
+					rm "$IMAGE"
 				fi
 
 				# Change bmp to jpg in $IMAGE var

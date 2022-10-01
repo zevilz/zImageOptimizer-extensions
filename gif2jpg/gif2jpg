@@ -34,7 +34,6 @@ if ! [[ -f "$IMAGE_NEW" ]]; then
 	# Check is converted
 	if [[ -f "$IMAGE_NEW" ]]; then
 
-		SAVE_ORIGINAL=0
 		REVERT_CONVERTING=0
 
 		includeExtensions gif2jpg-before-success
@@ -49,9 +48,7 @@ if ! [[ -f "$IMAGE_NEW" ]]; then
 
 			# Remove original GIF
 			if [[ $GIF2JPG_SAVE_ORIGINAL -eq 0 && -f "$IMAGE" ]]; then
-				if [[ $SAVE_ORIGINAL -eq 0 ]]; then
-					rm "$IMAGE"
-				fi
+				rm "$IMAGE"
 			fi
 
 			# Change gif to jpg in $IMAGE var

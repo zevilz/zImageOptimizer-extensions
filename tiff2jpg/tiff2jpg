@@ -23,6 +23,11 @@ if [[ $EXT == "tiff" || $EXT == "TIFF" || $EXT == "tif" || $EXT == "TIF" ]]; the
 		# Disable build-in image restoration if original is smaller
 		RESTORE_IMAGE_CHECK=0
 
+		# Redefine TIFF2JPG_SAVE_FILENAME via CONVERT_SAVE_FILENAME var
+		if ! [ -z "$CONVERT_SAVE_FILENAME" ]; then
+			TIFF2JPG_SAVE_FILENAME=$CONVERT_SAVE_FILENAME
+		fi
+
 		# Convert image from TIFF to JPG
 		if [ $TIFF2JPG_SAVE_FILENAME -eq 1 ]; then
 			convert "$IMAGE" "${IMAGE}.jpg"

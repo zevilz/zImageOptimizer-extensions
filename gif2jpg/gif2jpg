@@ -24,6 +24,11 @@ if ! [[ -f "$IMAGE_NEW" ]]; then
 	# Disable build-in image restoration if original is smaller
 	RESTORE_IMAGE_CHECK=0
 
+	# Redefine GIF2JPG_SAVE_FILENAME via CONVERT_SAVE_FILENAME var
+	if ! [ -z "$CONVERT_SAVE_FILENAME" ]; then
+		GIF2JPG_SAVE_FILENAME=$CONVERT_SAVE_FILENAME
+	fi
+
 	# Convert image from GIF to JPG
 	if [ $GIF2JPG_SAVE_FILENAME -eq 1 ]; then
 		convert -background white -flatten "$IMAGE" "${IMAGE}.jpg"

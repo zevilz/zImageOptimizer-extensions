@@ -23,6 +23,11 @@ if [[ $EXT == "bmp" || $EXT == "BMP" ]]; then
 		# Disable build-in image restoration if original is smaller
 		RESTORE_IMAGE_CHECK=0
 
+		# Redefine BMP2JPG_SAVE_FILENAME via CONVERT_SAVE_FILENAME var
+		if ! [ -z "$CONVERT_SAVE_FILENAME" ]; then
+			BMP2JPG_SAVE_FILENAME=$CONVERT_SAVE_FILENAME
+		fi
+
 		# Convert image from BMP to JPG
 		if [ $BMP2JPG_SAVE_FILENAME -eq 1 ]; then
 			convert "$IMAGE" "${IMAGE}.jpg"

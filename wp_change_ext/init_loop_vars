@@ -1,5 +1,6 @@
 # Extension: wp_change_ext
 # Hook: init-loop-vars-after
 
+CONVERT_SAVE_FILENAME=0
 WP_REPLACED=0
 WP_REPLACEMENTS=0

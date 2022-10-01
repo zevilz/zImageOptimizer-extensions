@@ -48,8 +48,6 @@ if [[ "$WP_REPLACE_ATTACHMENT_RESULT" -eq 0 || "$WP_REPLACE_ATTACHMENT_RESULT" -
 			echo -n "[UNKNOWN WP REPLACEMENTS COUNT]"
 			$SETCOLOR_NORMAL
 		fi
-
-		rm $IMAGE_OLD
 	else
 		# Restore old attachment data
 		if [ "$WP_REPLACE_ATTACHMENT_RESULT" -eq 0 ]; then

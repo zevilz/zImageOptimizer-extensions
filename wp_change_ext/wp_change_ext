@@ -11,30 +11,61 @@ PATH=$(echo "$BINARY_PATHS" | tr ' ' ':')
 IMAGE_OLD_URI=$(echo "$IMAGE_OLD" | sed "s|${WP_ROOT}||")
 IMAGE_NEW_URI=$(echo "$IMAGE_NEW" | sed "s|${WP_ROOT}||")
 
-# Replace
+# Replace attachment data
 if [ $CUR_USER == "root" ]; then
-	WP_REPLACE=$(su -l $WP_OWNER -s /bin/bash -c "$WPCLI search-replace \"${IMAGE_OLD_URI}\" \"${IMAGE_NEW_URI}\" --all-tables --path=${WP_ROOT} --report-changed-only --all-tables")
+	WP_REPLACE_ATTACHMENT=$(su -l $WP_OWNER -s /bin/bash -c "$WPCLI zio replace \"${IMAGE_OLD}\" \"${IMAGE_NEW}\" --path=${WP_ROOT}")
 else
-	WP_REPLACE=$($WPCLI search-replace "${IMAGE_OLD_URI}" "${IMAGE_NEW_URI}" --all-tables --path=${WP_ROOT} --report-changed-only --all-tables)
+	WP_REPLACE_ATTACHMENT=$($WPCLI zio replace "${IMAGE_OLD}" "${IMAGE_NEW}" --path=${WP_ROOT})
 fi
 
-if [ $? -eq 0 ]; then
-	IMAGE_REPLACEMENTS=$(echo "$WP_REPLACE" | grep "Success:" | sed 's/.*Made \([0-9]\+\) replacements.*/\1/')
-	if [[ "$IMAGE_REPLACEMENTS" =~ ^[0-9]+$ ]]; then
-		WP_REPLACEMENTS=$(echo "$WP_REPLACEMENTS+$IMAGE_REPLACEMENTS" | bc)
-		if [ $WP_REPLACEMENTS -eq 0 ]; then
-			echo -n "[NO WP REPLACEMENTS]"
+WP_REPLACE_ATTACHMENT_RESULT=$?
+
+if [[ "$WP_REPLACE_ATTACHMENT_RESULT" -eq 0 || "$WP_REPLACE_ATTACHMENT_RESULT" -eq 2 ]]; then
+
+	# Replace URLs
+	if [ $CUR_USER == "root" ]; then
+		WP_REPLACE=$(su -l $WP_OWNER -s /bin/bash -c "$WPCLI search-replace \"${IMAGE_OLD_URI}\" \"${IMAGE_NEW_URI}\" --path=${WP_ROOT} --report-changed-only --all-tables")
+	else
+		WP_REPLACE=$($WPCLI search-replace "${IMAGE_OLD_URI}" "${IMAGE_NEW_URI}" --path=${WP_ROOT} --report-changed-only --all-tables)
+	fi
+
+	WP_REPLACE_RESULT=$?
+
+	if [ "$WP_REPLACE_RESULT" -eq 0 ]; then
+		IMAGE_REPLACEMENTS=$(echo "$WP_REPLACE" | grep "Success:" | sed 's/.*Made \([0-9]\+\) replacements.*/\1/')
+		if [[ "$IMAGE_REPLACEMENTS" =~ ^[0-9]+$ ]]; then
+			WP_REPLACEMENTS=$(echo "$WP_REPLACEMENTS+$IMAGE_REPLACEMENTS" | bc)
+			if [ $WP_REPLACEMENTS -eq 0 ]; then
+				echo -n "[NO WP REPLACEMENTS]"
+			else
+				WP_REPLACED=$(echo "$WP_REPLACED+1" | bc)
+				$SETCOLOR_SUCCESS
+				echo -n "[WP REPLACEMENTS: ${WP_REPLACEMENTS}]"
+				$SETCOLOR_NORMAL
+			fi
 		else
-			WP_REPLACED=$(echo "$WP_REPLACED+1" | bc)
-			$SETCOLOR_SUCCESS
-			echo -n "[WP REPLACEMENTS: ${WP_REPLACEMENTS}]"
+			$SETCOLOR_FAILURE
+			echo -n "[UNKNOWN WP REPLACEMENTS COUNT]"
 			$SETCOLOR_NORMAL
 		fi
+
+		rm $IMAGE_OLD
 	else
+		# Restore old attachment data
+		if [ "$WP_REPLACE_ATTACHMENT_RESULT" -eq 0 ]; then
+			if [ $CUR_USER == "root" ]; then
+				WP_REPLACE_ATTACHMENT=$(su -l $WP_OWNER -s /bin/bash -c "$WPCLI zio replace \"${IMAGE_NEW}\" \"${IMAGE_OLD}\" --path=${WP_ROOT}")
+			else
+				WP_REPLACE_ATTACHMENT=$($WPCLI zio replace "${IMAGE_NEW}" "${IMAGE_OLD}" --path=${WP_ROOT})
+			fi
+		fi
+
 		$SETCOLOR_FAILURE
-		echo -n "[UNKNOWN WP REPLACEMENTS COUNT]"
+		echo -n "[REPLACE IN WP FAILED]"
 		$SETCOLOR_NORMAL
+		REVERT_CONVERTING=1
 	fi
+
 else
 	$SETCOLOR_FAILURE
 	echo -n "[REPLACE IN WP FAILED]"

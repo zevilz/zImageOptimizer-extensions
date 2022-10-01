@@ -1,8 +1,9 @@
 # Extension: wp_change_ext
 # Hook: total-info-time-before
 
-echo -n "Replaced in WP / Total replacements: "
+echo -n "Updated attachments data in WP: "
+echo $WP_ATTACHMENTS_REPLACED
+echo -n "Replaced images in WP / Total replacements: "
 echo -n $WP_IMAGES_REPLACED
 echo -n " / "
-echo -n $WP_IMAGES_REPLACEMENTS
-echo " images"
+echo $WP_IMAGES_REPLACEMENTS

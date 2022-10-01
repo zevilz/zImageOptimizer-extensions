@@ -28,6 +28,11 @@ if [[ $EXT == "tiff" || $EXT == "TIFF" || $EXT == "tif" || $EXT == "TIF" ]]; the
 			TIFF2JPG_SAVE_FILENAME=$CONVERT_SAVE_FILENAME
 		fi
 
+		# Redefine TIFF2JPG_SAVE_ORIGINAL via CONVERT_SAVE_ORIGINAL var
+		if ! [ -z "$CONVERT_SAVE_ORIGINAL" ]; then
+			TIFF2JPG_SAVE_ORIGINAL=$CONVERT_SAVE_ORIGINAL
+		fi
+
 		# Convert image from TIFF to JPG
 		if [ $TIFF2JPG_SAVE_FILENAME -eq 1 ]; then
 			convert "$IMAGE" "${IMAGE}.jpg"

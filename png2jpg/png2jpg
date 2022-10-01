@@ -29,6 +29,11 @@ if ! [[ -f "$IMAGE_NEW" ]]; then
 		PNG2JPG_SAVE_FILENAME=$CONVERT_SAVE_FILENAME
 	fi
 
+	# Redefine PNG2JPG_SAVE_ORIGINAL via CONVERT_SAVE_ORIGINAL var
+	if ! [ -z "$CONVERT_SAVE_ORIGINAL" ]; then
+		PNG2JPG_SAVE_ORIGINAL=$CONVERT_SAVE_ORIGINAL
+	fi
+
 	# Convert image from PNG to JPG
 	if [ $PNG2JPG_SAVE_FILENAME -eq 1 ]; then
 		convert -background white -flatten "$IMAGE" "${IMAGE}.jpg"

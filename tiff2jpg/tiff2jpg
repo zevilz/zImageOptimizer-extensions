@@ -5,6 +5,16 @@ if [[ $EXT == "tiff" || $EXT == "TIFF" || $EXT == "tif" || $EXT == "TIF" ]]; the
 
 	includeExtensions tiff2jpg-before
 
+	# Redefine TIFF2JPG_SAVE_FILENAME via CONVERT_SAVE_FILENAME var
+	if ! [ -z "$CONVERT_SAVE_FILENAME" ]; then
+		TIFF2JPG_SAVE_FILENAME=$CONVERT_SAVE_FILENAME
+	fi
+
+	# Redefine TIFF2JPG_SAVE_ORIGINAL via CONVERT_SAVE_ORIGINAL var
+	if ! [ -z "$CONVERT_SAVE_ORIGINAL" ]; then
+		TIFF2JPG_SAVE_ORIGINAL=$CONVERT_SAVE_ORIGINAL
+	fi
+
 	# Count TIFFs
 	IMAGES_TOTAL_TIFF=$(echo "$IMAGES_TOTAL_TIFF+1" | bc)
 
@@ -22,16 +32,6 @@ if [[ $EXT == "tiff" || $EXT == "TIFF" || $EXT == "tif" || $EXT == "TIF" ]]; the
 
 		# Disable build-in image restoration if original is smaller
 		RESTORE_IMAGE_CHECK=0
-
-		# Redefine TIFF2JPG_SAVE_FILENAME via CONVERT_SAVE_FILENAME var
-		if ! [ -z "$CONVERT_SAVE_FILENAME" ]; then
-			TIFF2JPG_SAVE_FILENAME=$CONVERT_SAVE_FILENAME
-		fi
-
-		# Redefine TIFF2JPG_SAVE_ORIGINAL via CONVERT_SAVE_ORIGINAL var
-		if ! [ -z "$CONVERT_SAVE_ORIGINAL" ]; then
-			TIFF2JPG_SAVE_ORIGINAL=$CONVERT_SAVE_ORIGINAL
-		fi
 
 		# Convert image from TIFF to JPG
 		if [ $TIFF2JPG_SAVE_FILENAME -eq 1 ]; then

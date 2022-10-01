@@ -5,6 +5,16 @@ if [[ $EXT == "bmp" || $EXT == "BMP" ]]; then
 
 	includeExtensions bmp2jpg-before
 
+	# Redefine BMP2JPG_SAVE_FILENAME via CONVERT_SAVE_FILENAME var
+	if ! [ -z "$CONVERT_SAVE_FILENAME" ]; then
+		BMP2JPG_SAVE_FILENAME=$CONVERT_SAVE_FILENAME
+	fi
+
+	# Redefine BMP2JPG_SAVE_ORIGINAL via CONVERT_SAVE_ORIGINAL var
+	if ! [ -z "$CONVERT_SAVE_ORIGINAL" ]; then
+		BMP2JPG_SAVE_ORIGINAL=$CONVERT_SAVE_ORIGINAL
+	fi
+
 	# Count BMPs
 	IMAGES_TOTAL_BMP=$(echo "$IMAGES_TOTAL_BMP+1" | bc)
 
@@ -22,16 +32,6 @@ if [[ $EXT == "bmp" || $EXT == "BMP" ]]; then
 
 		# Disable build-in image restoration if original is smaller
 		RESTORE_IMAGE_CHECK=0
-
-		# Redefine BMP2JPG_SAVE_FILENAME via CONVERT_SAVE_FILENAME var
-		if ! [ -z "$CONVERT_SAVE_FILENAME" ]; then
-			BMP2JPG_SAVE_FILENAME=$CONVERT_SAVE_FILENAME
-		fi
-
-		# Redefine BMP2JPG_SAVE_ORIGINAL via CONVERT_SAVE_ORIGINAL var
-		if ! [ -z "$CONVERT_SAVE_ORIGINAL" ]; then
-			BMP2JPG_SAVE_ORIGINAL=$CONVERT_SAVE_ORIGINAL
-		fi
 
 		# Convert image from BMP to JPG
 		if [ $BMP2JPG_SAVE_FILENAME -eq 1 ]; then

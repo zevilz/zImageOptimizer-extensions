@@ -23,6 +23,15 @@ if ! [[ -f "${WP_ROOT}/wp-load.php" ]]; then
 	exit 1
 fi
 
+if ! [[ -f "${WP_ROOT}/wp-content/mu-plugins/zio-helper.php" ]]; then
+	echo
+	$SETCOLOR_FAILURE
+	echo "zio-helper.php not found in ${WP_ROOT}/wp-content/mu-plugins/!"
+	$SETCOLOR_NORMAL
+	echo
+	exit 1
+fi
+
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
 	WP_OWNER=$(stat -c "%U" "${WP_ROOT}/wp-load.php")
 else

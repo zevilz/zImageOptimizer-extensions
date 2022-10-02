@@ -2,11 +2,11 @@
 # Hook: init-loop-vars-after
 
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
-	echo "$IMAGES" | tac
+	IMAGES=$(echo "$IMAGES" | tac)
 elif [[ "$OSTYPE" == "darwin"* ]]; then
-	echo "$IMAGES" | gtac
+	IMAGES=$(echo "$IMAGES" | gtac)
 elif [[ "$OSTYPE" == "FreeBSD"* ]]; then
-	echo "$IMAGES" | sed 'x;1!H;$!d;x'
+	IMAGES=$(echo "$IMAGES" | sed 'x;1!H;$!d;x')
 fi
 
-#echo "$IMAGES" | perl -e 'print reverse <>'
+#IMAGES=$(echo "$IMAGES" | perl -e 'print reverse <>')

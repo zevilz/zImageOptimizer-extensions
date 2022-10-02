@@ -2,3 +2,4 @@
 # Hook: after-init-deps
 
 DEPS_MACOS_ARR[WGET]="wget"
+DEPS_MACOS_ARR[COREUTILS]="coreutils"

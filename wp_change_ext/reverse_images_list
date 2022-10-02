@@ -1,0 +1,12 @@
+# Extension: wp_change_ext
+# Hook: init-loop-vars-after
+
+if [[ "$OSTYPE" == "linux-gnu" ]]; then
+	echo "$IMAGES" | tac
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+	echo "$IMAGES" | gtac
+elif [[ "$OSTYPE" == "FreeBSD"* ]]; then
+	echo "$IMAGES" | sed 'x;1!H;$!d;x'
+fi
+
+#echo "$IMAGES" | perl -e 'print reverse <>'

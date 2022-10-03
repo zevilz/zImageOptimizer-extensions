@@ -1,7 +1,7 @@
 # Extension: wp_change_ext
 # Hook: init-loop-vars-after
 
-IMAGES=$(echo "$IMAGES" | sort -r)
+IMAGES=$(echo "$IMAGES" | sort)
 
 #if [[ "$OSTYPE" == "linux-gnu" ]]; then
 #	IMAGES=$(echo "$IMAGES" | tac)

@@ -2,7 +2,7 @@
 # Hook: total-info-time-before
 
 echo -n "Updated attachments data in WP: "
-echo $WP_ATTACHMENTS_REPLACED
+echo $WP_ATTACHMENTS_UPDATED
 echo -n "Replaced images in WP / Total replacements: "
 echo -n $WP_IMAGES_REPLACED
 echo -n " / "

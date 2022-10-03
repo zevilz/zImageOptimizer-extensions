@@ -9,22 +9,26 @@ class zioHelper {
 
 	public function replace ( $args ) {
 		if ( empty( $args ) ) {
-			WP_CLI::error( 'You must set old and new attachments paths!' );
+			WP_CLI::error( 'You must set old and new images paths!' );
 		}
 
 		if ( empty( $args[1] ) ) {
-			WP_CLI::error( 'You must set new attachment path!' );
+			WP_CLI::error( 'You must set new image path!' );
 		}
 
 		$old['path'] = $args[0];
 		$new['path'] = $args[1];
 
+		if ( $old['path'] == $new['path'] ) {
+			WP_CLI::error( 'Old and new images paths is equals!' );
+		}
+
 		if ( ! file_exists( $new['path'] ) ) {
-			WP_CLI::error( 'New attachment file does not exists!' );
+			WP_CLI::error( 'New image does not exists!' );
 		}
 
 		if ( ! file_exists( $old['path'] ) ) {
-			WP_CLI::error( 'Old attachment file does not exists! It needed for restore.' );
+			WP_CLI::error( 'Old image does not exists! It needed for restore.' );
 		}
 
 		$attachment_id = $this->get_image_id_by_path( $old['path'] );

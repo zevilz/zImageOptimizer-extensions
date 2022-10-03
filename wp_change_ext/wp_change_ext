@@ -13,9 +13,9 @@ IMAGE_NEW_URI=$(echo "$IMAGE_NEW" | sed "s|${WP_ROOT}||")
 
 # Replace attachment data
 if [ $CUR_USER == "root" ]; then
-	WP_REPLACE_ATTACHMENT=$(su -l $WP_OWNER -s /bin/bash -c "$WPCLI zio replace \"${IMAGE_OLD}\" \"${IMAGE_NEW}\" --path=${WP_ROOT} --quiet")
+	WP_REPLACE_ATTACHMENT=$(su -l $WP_OWNER -s /bin/bash -c "$WPCLI zio replace \"${IMAGE_OLD}\" \"${IMAGE_NEW}\" --path=${WP_ROOT} --quiet 2>/dev/null")
 else
-	WP_REPLACE_ATTACHMENT=$($WPCLI zio replace "${IMAGE_OLD}" "${IMAGE_NEW}" --path=${WP_ROOT} --quiet)
+	WP_REPLACE_ATTACHMENT=$($WPCLI zio replace "${IMAGE_OLD}" "${IMAGE_NEW}" --path=${WP_ROOT} --quiet 2>/dev/null)
 fi
 
 WP_REPLACE_ATTACHMENT_RESULT=$?
@@ -24,9 +24,9 @@ if [[ "$WP_REPLACE_ATTACHMENT_RESULT" -eq 0 || "$WP_REPLACE_ATTACHMENT_RESULT" -
 
 	# Replace URLs
 	if [ $CUR_USER == "root" ]; then
-		WP_REPLACE=$(su -l $WP_OWNER -s /bin/bash -c "$WPCLI search-replace \"${IMAGE_OLD_URI}\" \"${IMAGE_NEW_URI}\" --path=${WP_ROOT} --report-changed-only --all-tables")
+		WP_REPLACE=$(su -l $WP_OWNER -s /bin/bash -c "$WPCLI search-replace \"${IMAGE_OLD_URI}\" \"${IMAGE_NEW_URI}\" --path=${WP_ROOT} --report-changed-only --all-tables 2>/dev/null")
 	else
-		WP_REPLACE=$($WPCLI search-replace "${IMAGE_OLD_URI}" "${IMAGE_NEW_URI}" --path=${WP_ROOT} --report-changed-only --all-tables)
+		WP_REPLACE=$($WPCLI search-replace "${IMAGE_OLD_URI}" "${IMAGE_NEW_URI}" --path=${WP_ROOT} --report-changed-only --all-tables 2>/dev/null)
 	fi
 
 	WP_REPLACE_RESULT=$?
@@ -60,9 +60,9 @@ if [[ "$WP_REPLACE_ATTACHMENT_RESULT" -eq 0 || "$WP_REPLACE_ATTACHMENT_RESULT" -
 		# Restore old attachment data
 		if [ "$WP_REPLACE_ATTACHMENT_RESULT" -eq 0 ]; then
 			if [ $CUR_USER == "root" ]; then
-				WP_REPLACE_ATTACHMENT=$(su -l $WP_OWNER -s /bin/bash -c "$WPCLI zio replace \"${IMAGE_NEW}\" \"${IMAGE_OLD}\" --path=${WP_ROOT} --quiet")
+				WP_REPLACE_ATTACHMENT=$(su -l $WP_OWNER -s /bin/bash -c "$WPCLI zio replace \"${IMAGE_NEW}\" \"${IMAGE_OLD}\" --path=${WP_ROOT} --quiet 2>/dev/null")
 			else
-				WP_REPLACE_ATTACHMENT=$($WPCLI zio replace "${IMAGE_NEW}" "${IMAGE_OLD}" --path=${WP_ROOT} --quiet)
+				WP_REPLACE_ATTACHMENT=$($WPCLI zio replace "${IMAGE_NEW}" "${IMAGE_OLD}" --path=${WP_ROOT} --quiet 2>/dev/null)
 			fi
 		fi
 

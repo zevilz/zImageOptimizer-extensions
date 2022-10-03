@@ -1,9 +1,38 @@
 # Extension: wp_change_ext
 # Hook: total-info-time-before
 
-echo -n "Updated attachments data in WP: "
-echo $WP_ATTACHMENTS_UPDATED
-echo -n "Replaced images in WP / Total replacements: "
+echo -n "WP - attachments data updates"
+if [ $WP_ATTACHMENTS_UPDATE_FAILS -gt 0 ]; then
+	echo -n " / "
+	$SETCOLOR_FAILURE
+	echo -n "fails"
+	$SETCOLOR_NORMAL
+fi
+echo -n ": "
+echo -n $WP_ATTACHMENTS_UPDATED
+if [ $WP_ATTACHMENTS_UPDATE_FAILS -gt 0 ]; then
+	echo -n " / "
+	$SETCOLOR_FAILURE
+	echo -n $WP_ATTACHMENTS_UPDATE_FAILS
+	$SETCOLOR_NORMAL
+fi
+echo
+
+echo -n "WP - replaced images / total replacements"
+if [ $WP_IMAGES_REPLACE_FAILS -gt 0 ]; then
+	echo -n " / "
+	$SETCOLOR_FAILURE
+	echo -n "fails"
+	$SETCOLOR_NORMAL
+fi
+echo -n ": "
 echo -n $WP_IMAGES_REPLACED
 echo -n " / "
-echo $WP_IMAGES_REPLACEMENTS
+echo -n $WP_IMAGES_REPLACEMENTS
+if [ $WP_IMAGES_REPLACE_FAILS -gt 0 ]; then
+	echo -n " / "
+	$SETCOLOR_FAILURE
+	echo -n $WP_IMAGES_REPLACE_FAILS
+	$SETCOLOR_NORMAL
+fi
+echo

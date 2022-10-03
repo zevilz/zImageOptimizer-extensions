@@ -46,13 +46,18 @@ class zioHelper {
 		$new['dir']  = pathinfo( $new['path'], PATHINFO_DIRNAME );
 		$old['url']  = wp_get_attachment_url( $attachment_id );
 		$new['url']  = str_replace( $old['name'], $new['name'], $old['url'] );
-		$new['mime'] = wp_get_image_mime( $new['path'] );
 		$old['mime'] = $this->wpdb->get_var(
 			$this->wpdb->prepare(
 				'SELECT post_mime_type FROM ' . $this->wpdb->posts . ' WHERE ID=%d',
 				$attachment_id
 			)
 		);
+		$new['mime'] = wp_get_image_mime( $new['path'] );
+
+		$old['_attached_file']  = get_post_meta( $attachment_id, '_wp_attached_file', true );
+		$new['_attached_file']  = str_replace( $old['name'], $new['name'], $old['_attached_file'] );
+		$old['attachment_data'] = wp_get_attachment_metadata( $attachment_id );
+		$new['attachment_data'] = $this->generate_new_image_metadata( $old, $new );
 
 		WP_CLI::debug( 'attachment ID: ' . $attachment_id, 'zio-helper' );
 		WP_CLI::debug( 'old path: ' . $old['path'], 'zio-helper' );
@@ -68,6 +73,11 @@ class zioHelper {
 		WP_CLI::debug( 'old mime: ' . $old['mime'], 'zio-helper' );
 		WP_CLI::debug( 'new mime: ' . $new['mime'], 'zio-helper' );
 
+		WP_CLI::debug( 'old _wp_attached_file: ' . $old['_attached_file'], 'zio-helper' );
+		WP_CLI::debug( 'new _wp_attached_file: ' . $new['_attached_file'], 'zio-helper' );
+		WP_CLI::debug( 'old _wp_attachment_metadata: ' . serialize( $old['attachment_data'] ), 'zio-helper' );
+		WP_CLI::debug( 'new _wp_attachment_metadata: ' . serialize( $new['attachment_data'] ), 'zio-helper' );
+
 		// update post
 		$update_attachment = $this->wpdb->update(
 			$this->wpdb->posts,
@@ -77,14 +87,13 @@ class zioHelper {
 				['%d']
 		);
 		if ( empty( $update_attachment ) ) {
+			// Regenerate subsizes
+			$this->regenerate_subsizes( $attachment_id, $old, $new );
+
 			WP_CLI::error( 'Attachment not updated!' );
 		}
 
 		// update postmeta (_wp_attached_file)
-		$old['_attached_file'] = get_post_meta( $attachment_id, '_wp_attached_file', true );
-		$new['_attached_file'] = str_replace( $old['name'], $new['name'], $old['_attached_file'] );
-		WP_CLI::debug( 'old _wp_attached_file: ' . $old['_attached_file'], 'zio-helper' );
-		WP_CLI::debug( 'new _wp_attached_file: ' . $new['_attached_file'], 'zio-helper' );
 		$update_meta_attached_file = update_post_meta( $attachment_id, '_wp_attached_file', $new['_attached_file'] );
 		if ( false === $update_meta_attached_file ) {
 			// Restore attachment
@@ -96,14 +105,13 @@ class zioHelper {
 					['%d']
 			);
 
+			// Regenerate subsizes
+			$this->regenerate_subsizes( $attachment_id, $old, $new );
+
 			WP_CLI::error( 'Meta _wp_attached_file not updated!' );
 		}
 
 		// update postmeta (_wp_attachment_metadata)
-		$old['attachment_data'] = wp_get_attachment_metadata( $attachment_id );
-		$new['attachment_data'] = $this->generate_new_image_metadata( $old, $new );
-		WP_CLI::debug( 'old _wp_attachment_metadata: ' . serialize( $old['attachment_data'] ), 'zio-helper' );
-		WP_CLI::debug( 'new _wp_attachment_metadata: ' . serialize( $new['attachment_data'] ), 'zio-helper' );
 		$update_meta_attachment_data = update_post_meta( $attachment_id, '_wp_attachment_metadata', $new['attachment_data'] );
 		if ( false === $update_meta_attachment_data ) {
 			// Restore attachment
@@ -118,11 +126,8 @@ class zioHelper {
 			// Restore meta _wp_attached_file
 			update_post_meta( $attachment_id, '_wp_attached_file', $old['_attached_file'] );
 
-			// Regenerate sizes
-			require_once( ABSPATH . 'wp-admin/includes/image.php' );
-			$attachment_data = wp_generate_attachment_metadata( $attachment_id, $old['path'] );
-			update_post_meta( $attachment_id, '_wp_attachment_metadata', $attachment_data );
-			$this->remove_converted_subsizes( $new['attachment_data']['sizes'], $new['dir'] );
+			// Regenerate subsizes
+			$this->regenerate_subsizes( $attachment_id, $old, $new );
 
 			WP_CLI::error( 'Meta _wp_attachment_metadata not updated!' );
 		}
@@ -169,6 +174,13 @@ class zioHelper {
 				unlink( $path );
 			} 
 		}
+	}
+
+	private function regenerate_subsizes( $attachment_id, $old, $new ) {
+		require_once( ABSPATH . 'wp-admin/includes/image.php' );
+		$attachment_data = wp_generate_attachment_metadata( $attachment_id, $old['path'] );
+		update_post_meta( $attachment_id, '_wp_attachment_metadata', $attachment_data );
+		$this->remove_converted_subsizes( $new['attachment_data']['sizes'], $new['dir'] );
 	}
 }
 

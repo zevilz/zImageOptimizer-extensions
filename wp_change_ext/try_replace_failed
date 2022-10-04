@@ -13,8 +13,8 @@ if [ -f "${TMP_PATH}/zio_wp_failed_replacements" ]; then
 
 		if [[ "$LINE" == *:* ]]; then
 
-			$IMAGE_OLD_URI=$(echo "$LINE" | cut -d ':' -f1)
-			$IMAGE_NEW_URI=$(echo "$LINE" | cut -d ':' -f2)
+			IMAGE_OLD_URI=$(echo "$LINE" | cut -d ':' -f1)
+			IMAGE_NEW_URI=$(echo "$LINE" | cut -d ':' -f2)
 
 			if [ $LESS -eq 0 ]; then
 				IMAGES_CURRENT=$(echo "$IMAGES_CURRENT+1" | bc)

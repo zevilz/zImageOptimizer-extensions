@@ -1,0 +1,72 @@
+# Extension: wp_change_ext
+# Hook: total-info-before
+
+if [ -f "${TMP_PATH}/zio_wp_failed_replacements" ]; then
+	echo
+	echo "Trying replace failed images in WP..."
+
+	IMAGES_CURRENT=0
+	IMAGES_TOTAL=$(cat "${TMP_PATH}/zio_wp_failed_replacements" | wc -l)
+
+	for LINE in "${TMP_PATH}/zio_wp_failed_replacements"; do
+
+		if [[ "$LINE" == *:* ]]; then
+
+			$IMAGE_OLD_URI=$(echo "$LINE" | cut -d ':' -f1)
+			$IMAGE_NEW_URI=$(echo "$LINE" | cut -d ':' -f2)
+
+			if [ $LESS -eq 0 ]; then
+				IMAGES_CURRENT=$(echo "$IMAGES_CURRENT+1" | bc)
+				echo -n "["
+				echo -n $IMAGES_CURRENT
+				echo -n "/"
+				echo -n $IMAGES_TOTAL
+				echo -n "] "
+				echo -n "$IMAGE_OLD_URI -> $IMAGE_NEW_URI"
+				echo -n '... '
+			fi
+
+			# Replace URLs
+			if [ $CUR_USER == "root" ]; then
+				WP_REPLACE=$(su -l $WP_OWNER -s /bin/bash -c "$WPCLI search-replace \"${IMAGE_OLD_URI}\" \"${IMAGE_NEW_URI}\" --path=${WP_ROOT} --report-changed-only --all-tables 2>/dev/null")
+			else
+				WP_REPLACE=$($WPCLI search-replace "${IMAGE_OLD_URI}" "${IMAGE_NEW_URI}" --path=${WP_ROOT} --report-changed-only --all-tables 2>/dev/null)
+			fi
+
+			WP_REPLACE_RESULT=$?
+
+			if [ "$WP_REPLACE_RESULT" -eq 0 ]; then
+
+				IMAGE_REPLACEMENTS=$(echo "$WP_REPLACE" | grep "Success:" | sed 's/.*Made \([0-9]\+\) replacements.*/\1/')
+				if [[ "$IMAGE_REPLACEMENTS" =~ ^[0-9]+$ ]]; then
+					WP_IMAGES_REPLACEMENTS=$(echo "$WP_IMAGES_REPLACEMENTS+$IMAGE_REPLACEMENTS" | bc)
+					if [ $IMAGE_REPLACEMENTS -eq 0 ]; then
+						echo -n "[NO WP REPLACEMENTS]"
+					else
+						WP_IMAGES_REPLACED=$(echo "$WP_IMAGES_REPLACED+1" | bc)
+						$SETCOLOR_SUCCESS
+						echo -n "[WP REPLACEMENTS: ${IMAGE_REPLACEMENTS}]"
+						$SETCOLOR_NORMAL
+					fi
+				else
+					$SETCOLOR_FAILURE
+					echo -n "[UNKNOWN WP REPLACEMENTS COUNT]"
+					$SETCOLOR_NORMAL
+				fi
+
+				WP_IMAGES_REPLACE_FAILS=$(echo "$WP_IMAGES_REPLACE_FAILS-1" | bc)
+
+			else
+
+				$SETCOLOR_FAILURE
+				echo -n "[WP REPLACE FAILED]"
+				$SETCOLOR_NORMAL
+
+			fi
+
+		fi
+
+	done
+
+	rm "${TMP_PATH}/zio_wp_failed_replacements"
+fi

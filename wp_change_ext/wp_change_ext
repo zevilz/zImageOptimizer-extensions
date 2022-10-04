@@ -64,6 +64,7 @@ if [[ "$WP_UPDATE_ATTACHMENT_RESULT" -eq 0 || "$WP_UPDATE_ATTACHMENT_RESULT" -eq
 			else
 				WP_UPDATE_ATTACHMENT=$($WPCLI zio replace "${IMAGE_NEW}" "${IMAGE_OLD}" --path=${WP_ROOT} --quiet 2>/dev/null)
 			fi
+			REVERT_CONVERTING=1
 		elif [ "$WP_UPDATE_ATTACHMENT_RESULT" -eq 2 ]; then
 			echo "${IMAGE_OLD_URI}:${IMAGE_NEW_URI}" >> "${TMP_PATH}/zio_wp_failed_replacements"
 		fi
@@ -73,7 +74,6 @@ if [[ "$WP_UPDATE_ATTACHMENT_RESULT" -eq 0 || "$WP_UPDATE_ATTACHMENT_RESULT" -eq
 		$SETCOLOR_FAILURE
 		echo -n "[WP REPLACE FAILED]"
 		$SETCOLOR_NORMAL
-		#REVERT_CONVERTING=1
 	fi
 
 else

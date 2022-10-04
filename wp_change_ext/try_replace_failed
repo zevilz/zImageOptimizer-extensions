@@ -8,7 +8,8 @@ if [ -f "${TMP_PATH}/zio_wp_failed_replacements" ]; then
 	IMAGES_CURRENT=0
 	IMAGES_TOTAL=$(cat "${TMP_PATH}/zio_wp_failed_replacements" | wc -l)
 
-	for LINE in "${TMP_PATH}/zio_wp_failed_replacements"; do
+	LINES=$(cat "${TMP_PATH}/zio_wp_failed_replacements")
+	for LINE in $LINES; do
 
 		if [[ "$LINE" == *:* ]]; then
 
@@ -67,6 +68,8 @@ if [ -f "${TMP_PATH}/zio_wp_failed_replacements" ]; then
 		fi
 
 	done
+
+	echo
 
 	rm "${TMP_PATH}/zio_wp_failed_replacements"
 fi

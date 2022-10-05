@@ -17,9 +17,9 @@ if [ "$FORCE_RETRY" -eq 1 ]; then
 	WP_UPDATE_ATTACHMENT_RESULT=666
 	until [[ "$WP_UPDATE_ATTACHMENT_RESULT" -eq 0 || "$WP_UPDATE_ATTACHMENT_RESULT" -eq 2 ]]; do
 		if [ $CUR_USER == "root" ]; then
-			WP_UPDATE_ATTACHMENT=$(su -l $WP_OWNER -s /bin/bash -c "$WPCLI zio replace \"${IMAGE_OLD}\" \"${IMAGE_NEW}\" --tmp-path=${TMP_PATH} --force-retry=1 --path=${WP_ROOT} --quiet 2>/dev/null")
+			WP_UPDATE_ATTACHMENT=$(su -l $WP_OWNER -s /bin/bash -c "$WPCLI zio replace \"${IMAGE_OLD}\" \"${IMAGE_NEW}\" --tmp-path=${TMP_PATH} --force-retry --path=${WP_ROOT} --quiet 2>/dev/null")
 		else
-			WP_UPDATE_ATTACHMENT=$($WPCLI zio replace "${IMAGE_OLD}" "${IMAGE_NEW}" --tmp-path=${TMP_PATH} --force-retry=1 --path=${WP_ROOT} --quiet 2>/dev/null)
+			WP_UPDATE_ATTACHMENT=$($WPCLI zio replace "${IMAGE_OLD}" "${IMAGE_NEW}" --tmp-path=${TMP_PATH} --force-retry --path=${WP_ROOT} --quiet 2>/dev/null)
 		fi
 
 		WP_UPDATE_ATTACHMENT_RESULT=$?
@@ -47,9 +47,9 @@ if [[ "$WP_UPDATE_ATTACHMENT_RESULT" -eq 0 || "$WP_UPDATE_ATTACHMENT_RESULT" -eq
 		WP_REPLACE_RESULT=666
 		until [[ "$WP_REPLACE_RESULT" -eq 0 ]]; do
 			if [ $CUR_USER == "root" ]; then
-				WP_REPLACE=$(su -l $WP_OWNER -s /bin/bash -c "$WPCLI search-replace \"${IMAGE_OLD_URI}\" \"${IMAGE_NEW_URI}\" --force-retry=1 --path=${WP_ROOT} --report-changed-only --all-tables 2>/dev/null")
+				WP_REPLACE=$(su -l $WP_OWNER -s /bin/bash -c "$WPCLI search-replace \"${IMAGE_OLD_URI}\" \"${IMAGE_NEW_URI}\" --path=${WP_ROOT} --report-changed-only --all-tables 2>/dev/null")
 			else
-				WP_REPLACE=$($WPCLI search-replace "${IMAGE_OLD_URI}" "${IMAGE_NEW_URI}" --force-retry=1 --path=${WP_ROOT} --report-changed-only --all-tables 2>/dev/null)
+				WP_REPLACE=$($WPCLI search-replace "${IMAGE_OLD_URI}" "${IMAGE_NEW_URI}" --path=${WP_ROOT} --report-changed-only --all-tables 2>/dev/null)
 			fi
 
 			WP_REPLACE_RESULT=$?

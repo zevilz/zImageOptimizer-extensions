@@ -47,7 +47,7 @@ class zioHelper {
 
 		$this->tmp_path = $assoc_args['tmp-path'];
 
-		if ( isset( $assoc_args['force-retry'] ) ) {
+		if ( ! empty( $assoc_args['force-retry'] ) ) {
 			$this->force_retry = true;
 		}
 

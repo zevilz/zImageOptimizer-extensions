@@ -12,9 +12,24 @@ IMAGE_OLD_URI=$(echo "$IMAGE_OLD" | sed "s|${WP_ROOT}||")
 IMAGE_NEW_URI=$(echo "$IMAGE_NEW" | sed "s|${WP_ROOT}||")
 
 # Replace attachment data
-ATTEMPTS=0
-WP_UPDATE_ATTACHMENT_RESULT=666
-until [[ "$WP_UPDATE_ATTACHMENT_RESULT" -eq 0 || "$WP_UPDATE_ATTACHMENT_RESULT" -eq 2 ]]; do
+if [ "$FORCE_RETRY" -eq 1 ]; then
+	ATTEMPTS=0
+	WP_UPDATE_ATTACHMENT_RESULT=666
+	until [[ "$WP_UPDATE_ATTACHMENT_RESULT" -eq 0 || "$WP_UPDATE_ATTACHMENT_RESULT" -eq 2 ]]; do
+		if [ $CUR_USER == "root" ]; then
+			WP_UPDATE_ATTACHMENT=$(su -l $WP_OWNER -s /bin/bash -c "$WPCLI zio replace \"${IMAGE_OLD}\" \"${IMAGE_NEW}\" --path=${WP_ROOT} --quiet 2>/dev/null")
+		else
+			WP_UPDATE_ATTACHMENT=$($WPCLI zio replace "${IMAGE_OLD}" "${IMAGE_NEW}" --path=${WP_ROOT} --quiet 2>/dev/null)
+		fi
+
+		WP_UPDATE_ATTACHMENT_RESULT=$?
+		ATTEMPTS=$(echo "$ATTEMPTS+1" | bc)
+
+		if [ $ATTEMPTS -eq 2 ]; then
+			echo -n "[WAITING FOR UPDATE]"
+		fi
+	done
+else
 	if [ $CUR_USER == "root" ]; then
 		WP_UPDATE_ATTACHMENT=$(su -l $WP_OWNER -s /bin/bash -c "$WPCLI zio replace \"${IMAGE_OLD}\" \"${IMAGE_NEW}\" --path=${WP_ROOT} --quiet 2>/dev/null")
 	else
@@ -22,19 +37,29 @@ until [[ "$WP_UPDATE_ATTACHMENT_RESULT" -eq 0 || "$WP_UPDATE_ATTACHMENT_RESULT" 
 	fi
 
 	WP_UPDATE_ATTACHMENT_RESULT=$?
-	ATTEMPTS=$(echo "$ATTEMPTS+1" | bc)
-
-	if [ $ATTEMPTS -eq 2 ]; then
-		echo -n "[WAITING FOR UPDATE]"
-	fi
-done
+fi
 
 if [[ "$WP_UPDATE_ATTACHMENT_RESULT" -eq 0 || "$WP_UPDATE_ATTACHMENT_RESULT" -eq 2 ]]; then
 
 	# Replace URLs
-	ATTEMPTS=0
-	WP_REPLACE_RESULT=666
-	until [[ "$WP_REPLACE_RESULT" -eq 0 ]]; do
+	if [ "$FORCE_RETRY" -eq 1 ]; then
+		ATTEMPTS=0
+		WP_REPLACE_RESULT=666
+		until [[ "$WP_REPLACE_RESULT" -eq 0 ]]; do
+			if [ $CUR_USER == "root" ]; then
+				WP_REPLACE=$(su -l $WP_OWNER -s /bin/bash -c "$WPCLI search-replace \"${IMAGE_OLD_URI}\" \"${IMAGE_NEW_URI}\" --path=${WP_ROOT} --report-changed-only --all-tables 2>/dev/null")
+			else
+				WP_REPLACE=$($WPCLI search-replace "${IMAGE_OLD_URI}" "${IMAGE_NEW_URI}" --path=${WP_ROOT} --report-changed-only --all-tables 2>/dev/null)
+			fi
+
+			WP_REPLACE_RESULT=$?
+			ATTEMPTS=$(echo "$ATTEMPTS+1" | bc)
+
+			if [ $ATTEMPTS -eq 2 ]; then
+				echo -n "[WAITING FOR REPLACE]"
+			fi
+		done
+	else
 		if [ $CUR_USER == "root" ]; then
 			WP_REPLACE=$(su -l $WP_OWNER -s /bin/bash -c "$WPCLI search-replace \"${IMAGE_OLD_URI}\" \"${IMAGE_NEW_URI}\" --path=${WP_ROOT} --report-changed-only --all-tables 2>/dev/null")
 		else
@@ -42,12 +67,7 @@ if [[ "$WP_UPDATE_ATTACHMENT_RESULT" -eq 0 || "$WP_UPDATE_ATTACHMENT_RESULT" -eq
 		fi
 
 		WP_REPLACE_RESULT=$?
-		ATTEMPTS=$(echo "$ATTEMPTS+1" | bc)
-
-		if [ $ATTEMPTS -eq 2 ]; then
-			echo -n "[WAITING FOR REPLACE]"
-		fi
-	done
+	fi
 
 	if [ "$WP_REPLACE_RESULT" -eq 0 ]; then
 

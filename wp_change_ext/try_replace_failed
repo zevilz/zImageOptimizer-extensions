@@ -71,7 +71,5 @@ if [ -f "${TMP_PATH}/zio_wp_failed_replacements" ]; then
 
 	done
 
-	echo
-
 	rm "${TMP_PATH}/zio_wp_failed_replacements"
 fi

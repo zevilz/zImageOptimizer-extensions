@@ -36,9 +36,9 @@ if ! [[ -f "$IMAGE_NEW" ]]; then
 
 	# Convert image from PNG to JPG
 	if [ $PNG2JPG_SAVE_FILENAME -eq 1 ]; then
-		convert -background white -flatten "$IMAGE" "${IMAGE}.jpg"
+		convert -quality 100 -background white -flatten "$IMAGE" "${IMAGE}.jpg"
 	else
-		mogrify -format jpg -background white -flatten "$IMAGE"
+		mogrify -quality 100 -format jpg -background white -flatten "$IMAGE"
 	fi
 
 	# Check is converted

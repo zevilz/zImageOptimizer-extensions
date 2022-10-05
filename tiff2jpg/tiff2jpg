@@ -35,9 +35,9 @@ if [[ $EXT == "tiff" || $EXT == "TIFF" || $EXT == "tif" || $EXT == "TIF" ]]; the
 
 		# Convert image from TIFF to JPG
 		if [ $TIFF2JPG_SAVE_FILENAME -eq 1 ]; then
-			convert "$IMAGE" "${IMAGE}.jpg"
+			convert -quality 100 "$IMAGE" "${IMAGE}.jpg"
 		else
-			mogrify -format jpg "$IMAGE"
+			mogrify -quality 100 -format jpg "$IMAGE"
 		fi
 
 		# Check is converted

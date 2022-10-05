@@ -13,3 +13,7 @@ WP_IMAGES_REPLACE_FAILS=0
 if [ -f "${TMP_PATH}/zio_wp_failed_replacements" ]; then
 	rm "${TMP_PATH}/zio_wp_failed_replacements"
 fi
+
+if [ -f "${TMP_PATH}/zio_wp_revert_subsizes_replacements" ]; then
+	rm "${TMP_PATH}/zio_wp_revert_subsizes_replacements"
+fi

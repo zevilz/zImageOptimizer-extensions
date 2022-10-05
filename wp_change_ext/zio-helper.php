@@ -1,6 +1,7 @@
 <?php
 class zioHelper {
-	var $tmp_path = false;
+	var $tmp_path    = false;
+	var $force_retry = false;
 
 	function __construct() {
 		global $wpdb;
@@ -35,7 +36,8 @@ class zioHelper {
 		$assoc_args = wp_parse_args(
 			$assoc_args,
 			[
-				'tmp-path' => false,
+				'tmp-path'    => false,
+				'force-retry' => false,
 			]
 		);
 
@@ -44,7 +46,12 @@ class zioHelper {
 		}
 
 		$this->tmp_path = $assoc_args['tmp-path'];
-		$attachment_id  = $this->get_image_id_by_path( $old['path'] );
+
+		if ( isset( $assoc_args['force-retry'] ) ) {
+			$this->force_retry = true;
+		}
+
+		$attachment_id     = $this->get_image_id_by_path( $old['path'] );
 
 		if ( false === $attachment_id ) {
 			WP_CLI::warning( 'Attachment ID not found!' );
@@ -185,7 +192,9 @@ class zioHelper {
 		$attachment_data = wp_generate_attachment_metadata( $attachment_id, $old['path'] );
 		update_post_meta( $attachment_id, '_wp_attachment_metadata', $attachment_data );
 		$this->remove_converted_subsizes( $new['attachment_data']['sizes'], $new['dir'] );
-		$this->prepare_subsizes_replace( $old['attachment_data']['sizes'], $new['attachment_data']['sizes'], $new['dir'] );
+		if ( false === $this->force_retry ) {
+			$this->prepare_subsizes_replace( $old['attachment_data']['sizes'], $new['attachment_data']['sizes'], $new['dir'] );
+		}
 	}
 
 	private function remove_converted_subsizes( $sizes, $dir ) {

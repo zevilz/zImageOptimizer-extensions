@@ -17,9 +17,9 @@ if [ "$FORCE_RETRY" -eq 1 ]; then
 	WP_UPDATE_ATTACHMENT_RESULT=666
 	until [[ "$WP_UPDATE_ATTACHMENT_RESULT" -eq 0 || "$WP_UPDATE_ATTACHMENT_RESULT" -eq 2 ]]; do
 		if [ $CUR_USER == "root" ]; then
-			WP_UPDATE_ATTACHMENT=$(su -l $WP_OWNER -s /bin/bash -c "$WPCLI zio replace \"${IMAGE_OLD}\" \"${IMAGE_NEW}\" --path=${WP_ROOT} --quiet 2>/dev/null")
+			WP_UPDATE_ATTACHMENT=$(su -l $WP_OWNER -s /bin/bash -c "$WPCLI zio replace \"${IMAGE_OLD}\" \"${IMAGE_NEW}\" --tmp-path=${TMP_PATH} --path=${WP_ROOT} --quiet 2>/dev/null")
 		else
-			WP_UPDATE_ATTACHMENT=$($WPCLI zio replace "${IMAGE_OLD}" "${IMAGE_NEW}" --path=${WP_ROOT} --quiet 2>/dev/null)
+			WP_UPDATE_ATTACHMENT=$($WPCLI zio replace "${IMAGE_OLD}" "${IMAGE_NEW}" --tmp-path=${TMP_PATH} --path=${WP_ROOT} --quiet 2>/dev/null)
 		fi
 
 		WP_UPDATE_ATTACHMENT_RESULT=$?
@@ -31,9 +31,9 @@ if [ "$FORCE_RETRY" -eq 1 ]; then
 	done
 else
 	if [ $CUR_USER == "root" ]; then
-		WP_UPDATE_ATTACHMENT=$(su -l $WP_OWNER -s /bin/bash -c "$WPCLI zio replace \"${IMAGE_OLD}\" \"${IMAGE_NEW}\" --path=${WP_ROOT} --quiet 2>/dev/null")
+		WP_UPDATE_ATTACHMENT=$(su -l $WP_OWNER -s /bin/bash -c "$WPCLI zio replace \"${IMAGE_OLD}\" \"${IMAGE_NEW}\" --tmp-path=${TMP_PATH} --path=${WP_ROOT} --quiet 2>/dev/null")
 	else
-		WP_UPDATE_ATTACHMENT=$($WPCLI zio replace "${IMAGE_OLD}" "${IMAGE_NEW}" --path=${WP_ROOT} --quiet 2>/dev/null)
+		WP_UPDATE_ATTACHMENT=$($WPCLI zio replace "${IMAGE_OLD}" "${IMAGE_NEW}" --tmp-path=${TMP_PATH} --path=${WP_ROOT} --quiet 2>/dev/null)
 	fi
 
 	WP_UPDATE_ATTACHMENT_RESULT=$?
@@ -98,9 +98,9 @@ if [[ "$WP_UPDATE_ATTACHMENT_RESULT" -eq 0 || "$WP_UPDATE_ATTACHMENT_RESULT" -eq
 		# Restore old attachment data
 		if [ "$WP_UPDATE_ATTACHMENT_RESULT" -eq 0 ]; then
 			if [ $CUR_USER == "root" ]; then
-				WP_UPDATE_ATTACHMENT=$(su -l $WP_OWNER -s /bin/bash -c "$WPCLI zio replace \"${IMAGE_NEW}\" \"${IMAGE_OLD}\" --path=${WP_ROOT} --quiet 2>/dev/null")
+				WP_UPDATE_ATTACHMENT=$(su -l $WP_OWNER -s /bin/bash -c "$WPCLI zio replace \"${IMAGE_NEW}\" \"${IMAGE_OLD}\" --tmp-path=${TMP_PATH} --path=${WP_ROOT} --quiet 2>/dev/null")
 			else
-				WP_UPDATE_ATTACHMENT=$($WPCLI zio replace "${IMAGE_NEW}" "${IMAGE_OLD}" --path=${WP_ROOT} --quiet 2>/dev/null)
+				WP_UPDATE_ATTACHMENT=$($WPCLI zio replace "${IMAGE_NEW}" "${IMAGE_OLD}" --tmp-path=${TMP_PATH} --path=${WP_ROOT} --quiet 2>/dev/null)
 			fi
 			REVERT_CONVERTING=1
 		elif [ "$WP_UPDATE_ATTACHMENT_RESULT" -eq 2 ]; then

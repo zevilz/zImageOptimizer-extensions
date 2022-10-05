@@ -42,7 +42,7 @@ class zioHelper {
 			WP_CLI::error( 'Path for temporary files not set (--tmp-path=<path>)!' );
 		}
 
-		$tmp_path      = $assoc_args['tmp-path']
+		$tmp_path      = $assoc_args['tmp-path'];
 		$attachment_id = $this->get_image_id_by_path( $old['path'] );
 
 		if ( false === $attachment_id ) {
@@ -197,7 +197,7 @@ class zioHelper {
 	}
 
 	private function prepare_subsizes_replace( $old_sizes, $new_sizes, $dir, $tmp_path ) {
-		foreach ( $old_sizes as $size = $old_size ) {
+		foreach ( $old_sizes as $size => $old_size ) {
 			$old_path = $dir . '/' . $old_size['file'];
 			$old_relative_path = str_replace( ABSPATH, '', $old_path );
 			$new_path = $dir . '/' . $new_sizes[$size]['file'];

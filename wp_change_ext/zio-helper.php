@@ -7,7 +7,7 @@ class zioHelper {
 		$this->wpdb = $wpdb;
 	}
 
-	public function replace ( $args ) {
+	public function replace ( $args, $assoc_args ) {
 		if ( empty( $args ) ) {
 			WP_CLI::error( 'You must set old and new images paths!' );
 		}
@@ -31,6 +31,18 @@ class zioHelper {
 			WP_CLI::error( 'Old image does not exists! It needed for restore.' );
 		}
 
+		$assoc_args = wp_parse_args(
+			$assoc_args,
+			[
+				'tmp-path' => false,
+			]
+		);
+
+		if ( empty( $assoc_args['tmp-path'] ) ) {
+			WP_CLI::error( 'Path for temporary files not set (--tmp-path=<path>)!' );
+		}
+
+		$tmp_path      = $assoc_args['tmp-path']
 		$attachment_id = $this->get_image_id_by_path( $old['path'] );
 
 		if ( false === $attachment_id ) {
@@ -167,6 +179,14 @@ class zioHelper {
 		return $metadata;
 	}
 
+	private function regenerate_subsizes( $attachment_id, $old, $new ) {
+		require_once( ABSPATH . 'wp-admin/includes/image.php' );
+		$attachment_data = wp_generate_attachment_metadata( $attachment_id, $old['path'] );
+		update_post_meta( $attachment_id, '_wp_attachment_metadata', $attachment_data );
+		$this->remove_converted_subsizes( $new['attachment_data']['sizes'], $new['dir'] );
+		$this->prepare_subsizes_replace( $old['attachment_data']['sizes'], $new['attachment_data']['sizes'], $new['dir'], $tmp_path );
+	}
+
 	private function remove_converted_subsizes( $sizes, $dir ) {
 		foreach ( $sizes as $size ) {
 			$path = $dir . '/' . $size['file'];
@@ -176,11 +196,14 @@ class zioHelper {
 		}
 	}
 
-	private function regenerate_subsizes( $attachment_id, $old, $new ) {
-		require_once( ABSPATH . 'wp-admin/includes/image.php' );
-		$attachment_data = wp_generate_attachment_metadata( $attachment_id, $old['path'] );
-		update_post_meta( $attachment_id, '_wp_attachment_metadata', $attachment_data );
-		$this->remove_converted_subsizes( $new['attachment_data']['sizes'], $new['dir'] );
+	private function prepare_subsizes_replace( $old_sizes, $new_sizes, $dir, $tmp_path ) {
+		foreach ( $old_sizes as $size = $old_size ) {
+			$old_path = $dir . '/' . $old_size['file'];
+			$old_relative_path = str_replace( ABSPATH, '', $old_path );
+			$new_path = $dir . '/' . $new_sizes[$size]['file'];
+			$new_relative_path = str_replace( ABSPATH, '', $new_path );
+			file_put_contents( $tmp_path . '/zio_wp_revert_subsizes_replacements', $new_relative_path . ':' . $old_relative_path, FILE_APPEND );
+		}
 	}
 }
 

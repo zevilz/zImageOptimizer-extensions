@@ -51,7 +51,7 @@ class zioHelper {
 			$this->force_retry = true;
 		}
 
-		$attachment_id     = $this->get_image_id_by_path( $old['path'] );
+		$attachment_id = $this->get_image_id_by_path( $old['path'] );
 
 		if ( false === $attachment_id ) {
 			WP_CLI::warning( 'Attachment ID not found!' );

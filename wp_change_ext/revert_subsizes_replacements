@@ -65,6 +65,8 @@ if [ -f "${TMP_PATH}/zio_wp_revert_subsizes_replacements" ]; then
 
 		fi
 
+		echo
+
 	done
 
 	echo

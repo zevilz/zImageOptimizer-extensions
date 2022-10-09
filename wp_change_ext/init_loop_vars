@@ -2,6 +2,7 @@
 # Hook: init-loop-vars-after
 
 # Don't change this vars
+
 CONVERT_SAVE_FILENAME=0
 CONVERT_SAVE_ORIGINAL=0
 WP_ATTACHMENTS_UPDATED=0

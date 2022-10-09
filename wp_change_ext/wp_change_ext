@@ -11,7 +11,23 @@ PATH=$(echo "$BINARY_PATHS" | tr ' ' ':')
 IMAGE_OLD_URI=$(echo "$IMAGE_OLD" | sed "s|${WP_ROOT}||")
 IMAGE_NEW_URI=$(echo "$IMAGE_NEW" | sed "s|${WP_ROOT}||")
 
-# Replace attachment data
+# Prepare parameters for search-replace
+WP_REPLACE_PARAMS="$WP_REPLACE_TABLES"
+if [ "$WP_REPLACE_ALL_TABLES" -eq 1 ]; then
+	WP_REPLACE_PARAMS="$WP_REPLACE_PARAMS --all-tables"
+else
+	if [ "$WP_REPLACE_NETWORK" -eq 1 ]; then
+		WP_REPLACE_PARAMS="$WP_REPLACE_PARAMS --network"
+	fi
+fi
+if ! [ -z "$WP_REPLACE_SKIP_TABLES" ]; then
+	WP_REPLACE_PARAMS="$WP_REPLACE_PARAMS --skip-tables=${WP_REPLACE_SKIP_TABLES}"
+fi
+if ! [ -z "$WP_REPLACE_SKIP_COLUMNS" ]; then
+	WP_REPLACE_PARAMS="$WP_REPLACE_PARAMS --skip-columns=${WP_REPLACE_SKIP_COLUMNS}"
+fi
+
+# Update attachment data
 if [ "$FORCE_RETRY" -eq 1 ]; then
 	ATTEMPTS=0
 	WP_UPDATE_ATTACHMENT_RESULT=666
@@ -47,9 +63,9 @@ if [[ "$WP_UPDATE_ATTACHMENT_RESULT" -eq 0 || "$WP_UPDATE_ATTACHMENT_RESULT" -eq
 		WP_REPLACE_RESULT=666
 		until [[ "$WP_REPLACE_RESULT" -eq 0 ]]; do
 			if [ $CUR_USER == "root" ]; then
-				WP_REPLACE=$(su -l $WP_OWNER -s /bin/bash -c "$WPCLI search-replace \"${IMAGE_OLD_URI}\" \"${IMAGE_NEW_URI}\" --path=${WP_ROOT} --report-changed-only --all-tables 2>/dev/null")
+				WP_REPLACE=$(su -l $WP_OWNER -s /bin/bash -c "$WPCLI search-replace \"${IMAGE_OLD_URI}\" \"${IMAGE_NEW_URI}\" $WP_REPLACE_PARAMS --path=${WP_ROOT} --report-changed-only 2>/dev/null")
 			else
-				WP_REPLACE=$($WPCLI search-replace "${IMAGE_OLD_URI}" "${IMAGE_NEW_URI}" --path=${WP_ROOT} --report-changed-only --all-tables 2>/dev/null)
+				WP_REPLACE=$($WPCLI search-replace "${IMAGE_OLD_URI}" "${IMAGE_NEW_URI}" $WP_REPLACE_PARAMS --path=${WP_ROOT} --report-changed-only 2>/dev/null)
 			fi
 
 			WP_REPLACE_RESULT=$?
@@ -61,9 +77,9 @@ if [[ "$WP_UPDATE_ATTACHMENT_RESULT" -eq 0 || "$WP_UPDATE_ATTACHMENT_RESULT" -eq
 		done
 	else
 		if [ $CUR_USER == "root" ]; then
-			WP_REPLACE=$(su -l $WP_OWNER -s /bin/bash -c "$WPCLI search-replace \"${IMAGE_OLD_URI}\" \"${IMAGE_NEW_URI}\" --path=${WP_ROOT} --report-changed-only --all-tables 2>/dev/null")
+			WP_REPLACE=$(su -l $WP_OWNER -s /bin/bash -c "$WPCLI search-replace \"${IMAGE_OLD_URI}\" \"${IMAGE_NEW_URI}\" $WP_REPLACE_PARAMS --path=${WP_ROOT} --report-changed-only 2>/dev/null")
 		else
-			WP_REPLACE=$($WPCLI search-replace "${IMAGE_OLD_URI}" "${IMAGE_NEW_URI}" --path=${WP_ROOT} --report-changed-only --all-tables 2>/dev/null)
+			WP_REPLACE=$($WPCLI search-replace "${IMAGE_OLD_URI}" "${IMAGE_NEW_URI}" $WP_REPLACE_PARAMS --path=${WP_ROOT} --report-changed-only 2>/dev/null)
 		fi
 
 		WP_REPLACE_RESULT=$?

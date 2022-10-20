@@ -100,16 +100,12 @@ class zioHelper {
 
 		// kama-thumbnail cache flush
 		$kama_thumbnail = get_option( 'kama_thumbnail' );
-		if ( ! empty( $kama_thumbnail ) && ! empty( $kama_thumbnail['meta_key'] ) && isset( $kama_thumbnail['cache_dir'] ) ) {
-			$kama_thumbnail_meta_key     = $kama_thumbnail['meta_key'];
-			$kama_thumbnail_cache_dir    = $kama_thumbnail['cache_dir'];
+		if ( ! empty( $kama_thumbnail ) ) {
+			$kama_thumbnail_meta_key     = ( ! empty( $kama_thumbnail['meta_key'] ) ) ? $kama_thumbnail['meta_key'] : 'photo_URL';
+			$kama_thumbnail_cache_dir    = ( ! empty( $kama_thumbnail['cache_dir'] ) ) ? $kama_thumbnail['cache_dir'] : untrailingslashit( str_replace( '\\', '/', WP_CONTENT_DIR . '/cache/thumb' ) );
 			$kama_thumbnail_img_hash     = md5( preg_replace( '~^(https?:)?//[^/]+~', '', $old['url'] ) );
 			$kama_thumbnail_img_mask     = substr( $kama_thumbnail_img_hash, -15 ) . '_*.' . $old['ext'];
 			$kama_thumbnail_img_sub_dir  = substr( $kama_thumbnail_img_hash, -2 );
-
-			if ( empty( $kama_thumbnail_cache_dir ) ) {
-				$kama_thumbnail_cache_dir = untrailingslashit( str_replace( '\\', '/', WP_CONTENT_DIR . '/cache/thumb' ) );
-			}
 
 			WP_CLI::debug( 'kama thumbnail meta_key: ' . $kama_thumbnail_meta_key, 'zio-helper' );
 			WP_CLI::debug( 'kama thumbnail cache dir: ' . $kama_thumbnail_cache_dir, 'zio-helper' );

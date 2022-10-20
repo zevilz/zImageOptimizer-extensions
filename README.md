@@ -48,6 +48,23 @@ Available vars (in `vars` file):
 - `BMP2JPG_SAVE_ORIGINAL` - saving original file: `1` (default) - save original file (not saved if `BMP2JPG_SAVE_FILENAME=0`), `0` - remove original file after converting;
 - `BMP2JPG_OPTIMIZE_JPG` - optimizing output JPG image: `1` (default) - optimize (supports restore not optimized image if optimized image is bigger), `0` - do not optimize.
 
+## wp_change_ext
+
+Change attacments data and urls in WordPress database after converting images via extensions from this repository.
+
+Requrements:
+
+- [wp-cli](https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar) installed in main script binary paths (`/bin /usr/bin /usr/local/bin` by default) with name `wp` and marked as executable (`chmod +x wp`)
+- [zio-helper.php](https://github.com/zevilz/zImageOptimizer-extensions/blob/master/wp_change_ext/zio-helper.php) must be replaced in `wp-content/mu-plugins` directory
+
+Warnings:
+- all old images will deleted when replacements is success (specified vars from converting extensions will be ignored)
+- old images extensions will not saved in filenames (specified vars from converting extensions will be ignored)
+
+Usage:
+
+
+
 ## disable_jpg
 
 Completely remove JPG support including checking tools and find images.

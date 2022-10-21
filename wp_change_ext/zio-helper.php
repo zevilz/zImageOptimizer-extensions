@@ -56,7 +56,7 @@ class zioHelper {
 		if ( ! empty( $kama_thumbnail ) ) {
 			$kama_thumbnail_meta_key     = ( ! empty( $kama_thumbnail['meta_key'] ) ) ? $kama_thumbnail['meta_key'] : 'photo_URL';
 			$kama_thumbnail_cache_dir    = ( ! empty( $kama_thumbnail['cache_dir'] ) ) ? $kama_thumbnail['cache_dir'] : untrailingslashit( str_replace( '\\', '/', WP_CONTENT_DIR . '/cache/thumb' ) );
-			$kama_thumbnail_img_hash     = md5( str_replace( untrailingslashit( ABSPATH ), '/', $old['path'] ) );
+			$kama_thumbnail_img_hash     = md5( str_replace( untrailingslashit( ABSPATH ), '', $old['path'] ) );
 			$kama_thumbnail_img_mask     = substr( $kama_thumbnail_img_hash, -15 ) . '_*.' . pathinfo( $old['path'], PATHINFO_EXTENSION );
 			$kama_thumbnail_img_sub_dir  = substr( $kama_thumbnail_img_hash, -2 );
 

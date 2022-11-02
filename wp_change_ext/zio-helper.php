@@ -9,6 +9,14 @@ class zioHelper {
 		$this->wpdb = $wpdb;
 	}
 
+	/**
+	 * WP CLI "replace" command for replace old image with new.
+	 * 
+	 * @param array $args       Command arguments
+	 * @param array $assoc_args Command assoc arguments
+	 * 
+	 * @return void
+	 */
 	public function replace ( $args, $assoc_args ) {
 		if ( empty( $args ) ) {
 			WP_CLI::error( 'You must set old and new images paths!' );
@@ -176,6 +184,13 @@ class zioHelper {
 		WP_CLI::success( 'Attachment data updated.' );
 	}
 
+	/**
+	 * Get attachment ID by path
+	 * 
+	 * @param string Relative image path
+	 * 
+	 * @return int|bool
+	 */
 	private function get_image_id_by_path ( $path ) {
 		$relative_path = str_replace( ABSPATH, '', $path );
 		$attachment_id = $this->wpdb->get_var(
@@ -192,6 +207,14 @@ class zioHelper {
 		return false;
 	}
 
+	/**
+	 * Generate attachment metadata for new image "_wp_attachment_metadata" post meta
+	 * 
+	 * @param array $old Old image data
+	 * @param array $new New image data
+	 * 
+	 * @return array
+	 */
 	private function generate_new_image_metadata( $old, $new ) {
 		$metadata = $old['attachment_data'];
 
@@ -208,6 +231,15 @@ class zioHelper {
 		return $metadata;
 	}
 
+	/**
+	 * Revert attachment data
+	 * 
+	 * @param int   $attachment_id Attachment ID
+	 * @param array $old           Old image data
+	 * @param array $new           New image data
+	 * 
+	 * @return void
+	 */
 	private function regenerate_subsizes( $attachment_id, $old, $new ) {
 		require_once( ABSPATH . 'wp-admin/includes/image.php' );
 		$attachment_data = wp_generate_attachment_metadata( $attachment_id, $old['path'] );
@@ -218,6 +250,14 @@ class zioHelper {
 		}
 	}
 
+	/**
+	 * Remove new image subsizes
+	 * 
+	 * @param array  $sizes Array with new attachment subsizes from attachment data
+	 * @param string $dir   Attachment dir (full path)
+	 * 
+	 * @return void 
+	 */
 	private function remove_converted_subsizes( $sizes, $dir ) {
 		foreach ( $sizes as $size ) {
 			$path = $dir . '/' . $size['file'];
@@ -227,6 +267,15 @@ class zioHelper {
 		}
 	}
 
+	/**
+	 * Puts old and new images relative paths in temporary file for reverting replacing urls
+	 * 
+	 * @param array  $old_sizes Array with old attachment subsizes from attachment data
+	 * @param array  $new_sizes Array with new attachment subsizes from attachment data
+	 * @param string $dir       Attachment dir (full path)
+	 * 
+	 * @return void 
+	 */
 	private function prepare_subsizes_replace( $old_sizes, $new_sizes, $dir ) {
 		foreach ( $old_sizes as $size => $old_size ) {
 			$old_path = $dir . '/' . $old_size['file'];

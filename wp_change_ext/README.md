@@ -34,7 +34,7 @@ Usage using with png2jpg extension with time marker (pereodical cron runs):
 bash zImageOptimizer.sh -p /path/to/wordpress/site/wp-content/uploads -n -m /path/to/marker/directory/markerName -ext png2jpg,wp_change_ext
 ```
 
-# Vars
+# Variables
 
 - `WP_ROOT` - WordPress root directory, set it if you use custom directory as working directory (not `wp-content/uploads`), empty by default;
 - `WPCLI_CUSTOM_PATH` - WP-CLI custom path (ex.: `/home/user/wp-cli.phar`), empty by default;
@@ -44,5 +44,7 @@ bash zImageOptimizer.sh -p /path/to/wordpress/site/wp-content/uploads -n -m /pat
 - `WP_REPLACE_NETWORK` - replace images urls in all network tables: `1` - search and replace in all network tables registered in `$wpdb` object on multisite install (`--network` parameter in wp-cli), `0` (default) - use only tables registered in `$wpdb` object, this var ignored if `WP_REPLACE_ALL_TABLES=1`;
 - `WP_REPLACE_SKIP_TABLES` - comma separated list of tables for exclude for search and replace urls (wildcard is supported, `--skip-tables=` parameter in wp-cli), empty by default;
 - `WP_REPLACE_SKIP_COLUMNS` - comma separated list of columns names for exclude for search and replace urls (wildcard is supported, `--skip-columns=` parameter in wp-cli), empty by default;
+
+Copy `vars_template` file as `vars` in same directory for modify variables.
 
 Hint: use `WP_REPLACE_*` vars for filtering tables and columns on which wp-cli will be make replacements (it is usefull on big databases and not optimized code for decrease replace time).

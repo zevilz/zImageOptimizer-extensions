@@ -6,6 +6,7 @@ Changes attacments data and urls in WordPress database after converting images v
 
 - [wp-cli](https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar) installed in main script binary paths (`/bin /usr/bin /usr/local/bin` by default) with name `wp` and marked as executable (`chmod +x wp`)
 - [zio-helper.php](https://github.com/zevilz/zImageOptimizer-extensions/blob/master/wp_change_ext/zio-helper.php) must be copied in `wp-content/mu-plugins` directory
+- one or more installed extensions for converting from this repository.
 
 ## Usage
 

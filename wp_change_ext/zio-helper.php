@@ -60,23 +60,31 @@ class zioHelper {
 		}
 
 		// kama-thumbnail cache flush
-		$kama_thumbnail = get_option( 'kama_thumbnail' );
-		if ( ! empty( $kama_thumbnail ) ) {
-			$kama_thumbnail_meta_key     = ( ! empty( $kama_thumbnail['meta_key'] ) ) ? $kama_thumbnail['meta_key'] : 'photo_URL';
-			$kama_thumbnail_cache_dir    = ( ! empty( $kama_thumbnail['cache_dir'] ) ) ? $kama_thumbnail['cache_dir'] : untrailingslashit( str_replace( '\\', '/', WP_CONTENT_DIR . '/cache/thumb' ) );
-			$kama_thumbnail_img_hash     = md5( str_replace( untrailingslashit( ABSPATH ), '', $old['path'] ) );
-			$kama_thumbnail_img_mask     = substr( $kama_thumbnail_img_hash, -15 ) . '_*.' . pathinfo( $old['path'], PATHINFO_EXTENSION );
-			$kama_thumbnail_img_sub_dir  = substr( $kama_thumbnail_img_hash, -2 );
+		if ( function_exists('kthumb_cache') && method_exists( kthumb_cache(), 'clear_img_cache' ) ) { // since v3.4.2
+			$kama_thumbnail_removed = kthumb_cache()->clear_img_cache( str_replace( untrailingslashit( ABSPATH ), '', $old['path'] ) );
+			if ( ! empty( $kama_thumbnail_removed ) ) {
+				WP_CLI::debug( 'kama thumbnail removed images count: ' . $kama_thumbnail_removed, 'zio-helper' );
+			}
+		}
+		else { // older versions
+			$kama_thumbnail = get_option( 'kama_thumbnail' );
+			if ( ! empty( $kama_thumbnail ) ) {
+				$kama_thumbnail_meta_key     = ( ! empty( $kama_thumbnail['meta_key'] ) ) ? $kama_thumbnail['meta_key'] : 'photo_URL';
+				$kama_thumbnail_cache_dir    = ( ! empty( $kama_thumbnail['cache_dir'] ) ) ? $kama_thumbnail['cache_dir'] : untrailingslashit( str_replace( '\\', '/', WP_CONTENT_DIR . '/cache/thumb' ) );
+				$kama_thumbnail_img_hash     = md5( str_replace( untrailingslashit( ABSPATH ), '', $old['path'] ) );
+				$kama_thumbnail_img_mask     = substr( $kama_thumbnail_img_hash, -15 ) . '_*.' . pathinfo( $old['path'], PATHINFO_EXTENSION );
+				$kama_thumbnail_img_sub_dir  = substr( $kama_thumbnail_img_hash, -2 );
 
-			WP_CLI::debug( 'kama thumbnail meta_key: ' . $kama_thumbnail_meta_key, 'zio-helper' );
-			WP_CLI::debug( 'kama thumbnail cache dir: ' . $kama_thumbnail_cache_dir, 'zio-helper' );
-			WP_CLI::debug( 'kama thumbnail full img hash: ' . $kama_thumbnail_img_hash, 'zio-helper' );
-			WP_CLI::debug( 'kama thumbnail files mask: ' . $kama_thumbnail_img_mask, 'zio-helper' );
-			WP_CLI::debug( 'kama thumbnail image subdir: ' . $kama_thumbnail_img_sub_dir, 'zio-helper' );
+				WP_CLI::debug( 'kama thumbnail meta_key: ' . $kama_thumbnail_meta_key, 'zio-helper' );
+				WP_CLI::debug( 'kama thumbnail cache dir: ' . $kama_thumbnail_cache_dir, 'zio-helper' );
+				WP_CLI::debug( 'kama thumbnail full img hash: ' . $kama_thumbnail_img_hash, 'zio-helper' );
+				WP_CLI::debug( 'kama thumbnail files mask: ' . $kama_thumbnail_img_mask, 'zio-helper' );
+				WP_CLI::debug( 'kama thumbnail image subdir: ' . $kama_thumbnail_img_sub_dir, 'zio-helper' );
 
-			foreach ( glob( $kama_thumbnail_cache_dir . '/' . $kama_thumbnail_img_sub_dir . '/' . $kama_thumbnail_img_mask ) as $file ) {
-				WP_CLI::debug( 'kama thumbnail removed image: ' . $file, 'zio-helper' );
-				unlink( $file );
+				foreach ( glob( $kama_thumbnail_cache_dir . '/' . $kama_thumbnail_img_sub_dir . '/' . $kama_thumbnail_img_mask ) as $file ) {
+					WP_CLI::debug( 'kama thumbnail removed image: ' . $file, 'zio-helper' );
+					unlink( $file );
+				}
 			}
 		}
 
@@ -256,7 +264,7 @@ class zioHelper {
 	 * @param array  $sizes Array with new attachment subsizes from attachment data
 	 * @param string $dir   Attachment dir (full path)
 	 * 
-	 * @return void 
+	 * @return void
 	 */
 	private function remove_converted_subsizes( $sizes, $dir ) {
 		foreach ( $sizes as $size ) {
@@ -274,7 +282,7 @@ class zioHelper {
 	 * @param array  $new_sizes Array with new attachment subsizes from attachment data
 	 * @param string $dir       Attachment dir (full path)
 	 * 
-	 * @return void 
+	 * @return void
 	 */
 	private function prepare_subsizes_replace( $old_sizes, $new_sizes, $dir ) {
 		foreach ( $old_sizes as $size => $old_size ) {

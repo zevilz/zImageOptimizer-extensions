@@ -46,6 +46,6 @@ bash zImageOptimizer.sh -p /path/to/wordpress/site/wp-content/uploads -n -m /pat
 - `WP_REPLACE_SKIP_TABLES` - comma separated list of tables for exclude for search and replace urls (wildcard is supported, `--skip-tables=` parameter in wp-cli), empty by default;
 - `WP_REPLACE_SKIP_COLUMNS` - comma separated list of columns names for exclude for search and replace urls (wildcard is supported, `--skip-columns=` parameter in wp-cli), empty by default;
 
-Copy `vars_template` file as `vars` in same directory for modify variables.
+You must copy `vars_template` file as `vars` in same directory for modify variables.
 
 Hint: use `WP_REPLACE_*` vars for filtering tables and columns on which wp-cli will be make replacements (it is usefull on big databases and not optimized code for decrease replace time).

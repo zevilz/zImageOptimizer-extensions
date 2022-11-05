@@ -50,20 +50,9 @@ Available vars (in `vars` file):
 
 ## wp_change_ext
 
-Change attacments data and urls in WordPress database after converting images via extensions from this repository.
+Changes attacments data and urls in WordPress database after converting images via extensions from this repository.
 
-Requrements:
-
-- [wp-cli](https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar) installed in main script binary paths (`/bin /usr/bin /usr/local/bin` by default) with name `wp` and marked as executable (`chmod +x wp`)
-- [zio-helper.php](https://github.com/zevilz/zImageOptimizer-extensions/blob/master/wp_change_ext/zio-helper.php) must be replaced in `wp-content/mu-plugins` directory
-
-Warnings:
-- all old images will deleted when replacements is success (specified vars from converting extensions will be ignored)
-- old images extensions will not saved in filenames (specified vars from converting extensions will be ignored)
-
-Usage:
-
-
+[Read more..](https://github.com/zevilz/zImageOptimizer-extensions/tree/master/wp_change_ext)
 
 ## disable_jpg
 

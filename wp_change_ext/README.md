@@ -4,9 +4,15 @@ Changes attacments data and urls in WordPress database after converting images v
 
 ## Requrements
 
-- [wp-cli](https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar) installed in main script binary paths (`/bin /usr/bin /usr/local/bin` by default) with name `wp` and marked as executable (`chmod +x wp`)
-- [zio-helper.php](https://github.com/zevilz/zImageOptimizer-extensions/blob/master/wp_change_ext/zio-helper.php) must be copied in `wp-content/mu-plugins` directory
+- [wp-cli](https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar) installed in main script binary paths (`/bin /usr/bin /usr/local/bin` by default) with name `wp` and marked as executable (`chmod +x wp`);
+- [zio-helper.php](https://github.com/zevilz/zImageOptimizer-extensions/blob/master/wp_change_ext/zio-helper.php) must be copied in `wp-content/mu-plugins` directory;
 - one or more installed extensions for converting from this repository ([png2jpg](https://github.com/zevilz/zImageOptimizer-extensions#png2jpg), [gif2jpg](https://github.com/zevilz/zImageOptimizer-extensions#gif2jpg), [tiff2jpg](https://github.com/zevilz/zImageOptimizer-extensions#tiff2jpg), [bmp2jpg](https://github.com/zevilz/zImageOptimizer-extensions#bmp2jpg)).
+
+The script can install wp-cli automatically into /bin/wp. You can did it in normal mode or in check mode with included extension:
+
+```bash
+bash zImageOptimizer.sh -c -ext wp_change_ext
+```
 
 ## Usage
 

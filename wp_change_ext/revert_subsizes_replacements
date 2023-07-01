@@ -38,7 +38,7 @@ if [ -f "${TMP_PATH}/zio_wp_revert_subsizes_replacements" ]; then
 
 			if [ "$WP_REPLACE_RESULT" -eq 0 ]; then
 
-				IMAGE_REPLACEMENTS=$(echo "$WP_REPLACE" | grep "Success:" | sed 's/.*Made \([0-9]\+\) replacements.*/\1/')
+				IMAGE_REPLACEMENTS=$(echo "$WP_REPLACE" | grep "Success:" | sed 's/.*Made \([0-9]\+\) replacement.*/\1/')
 				if [[ "$IMAGE_REPLACEMENTS" =~ ^[0-9]+$ ]]; then
 					WP_IMAGES_REPLACEMENTS=$(echo "$WP_IMAGES_REPLACEMENTS-$IMAGE_REPLACEMENTS" | bc)
 					if [ $IMAGE_REPLACEMENTS -eq 0 ]; then

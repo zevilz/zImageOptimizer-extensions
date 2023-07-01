@@ -94,7 +94,7 @@ if [[ "$WP_UPDATE_ATTACHMENT_RESULT" -eq 0 || "$WP_UPDATE_ATTACHMENT_RESULT" -eq
 			$SETCOLOR_NORMAL
 		fi
 
-		IMAGE_REPLACEMENTS=$(echo "$WP_REPLACE" | grep "Success:" | sed 's/.*Made \([0-9]\+\) replacements.*/\1/')
+		IMAGE_REPLACEMENTS=$(echo "$WP_REPLACE" | grep "Success:" | sed 's/.*Made \([0-9]\+\) replacement.*/\1/')
 		if [[ "$IMAGE_REPLACEMENTS" =~ ^[0-9]+$ ]]; then
 			WP_IMAGES_REPLACEMENTS=$(echo "$WP_IMAGES_REPLACEMENTS+$IMAGE_REPLACEMENTS" | bc)
 			if [ $IMAGE_REPLACEMENTS -eq 0 ]; then
